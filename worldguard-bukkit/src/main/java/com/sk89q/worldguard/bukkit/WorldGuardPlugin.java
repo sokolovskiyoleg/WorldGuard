@@ -65,7 +65,6 @@ import com.sk89q.worldguard.bukkit.util.Events;
 import com.sk89q.worldguard.commands.GeneralCommands;
 import com.sk89q.worldguard.commands.ProtectionCommands;
 import com.sk89q.worldguard.commands.ToggleCommands;
-import com.sk89q.worldguard.domains.registry.SimpleDomainRegistry;
 import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.flags.registry.SimpleFlagRegistry;
@@ -213,7 +212,6 @@ public class WorldGuardPlugin extends JavaPlugin {
         });
 
         ((SimpleFlagRegistry) WorldGuard.getInstance().getFlagRegistry()).setInitialized(true);
-        ((SimpleDomainRegistry) WorldGuard.getInstance().getDomainRegistry()).setInitialized(true);
 
         // Enable metrics
         final Metrics metrics = new Metrics(this, BSTATS_PLUGIN_ID); // bStats plugin id
