@@ -21,7 +21,7 @@ package com.sk89q.worldguard.protection.flags.registry;
 
 import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.FlagContext;
-import com.sk89q.worldguard.protection.flags.InvalidFlagFormat;
+import com.sk89q.worldguard.protection.flags.InvalidFlagFormatException;
 
 import javax.annotation.Nullable;
 
@@ -32,8 +32,8 @@ public class UnknownFlag extends Flag<Object> {
     }
 
     @Override
-    public Object parseInput(FlagContext context) throws InvalidFlagFormat {
-        throw new InvalidFlagFormat("Плагин, зарегистрировавший этот флаг, в настоящее время не установлен");
+    public Object parseInput(FlagContext context) throws InvalidFlagFormatException {
+        throw new InvalidFlagFormatException("Плагин, зарегистрировавший этот флаг, в настоящее время не установлен");
     }
 
     @Override
