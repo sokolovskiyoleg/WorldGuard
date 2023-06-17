@@ -86,11 +86,7 @@ public class LocationFlag extends Flag<Location> {
             }
             return loc;
         }
-<<<<<<< HEAD
-        throw new InvalidFlagFormat("Значение может быть только 'here' или x,y,z.");
-=======
-        throw new InvalidFlagFormatException("Expected 'here' or x,y,z.");
->>>>>>> bb3fdcc8800b15e819eb52e1fe054ef48af10eeb
+        throw new InvalidFlagFormatException("Значение может быть только 'here' или x,y,z.");
     }
 
     @Override
