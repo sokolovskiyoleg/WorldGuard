@@ -26,7 +26,6 @@ import com.sk89q.worldedit.internal.command.exception.ExceptionMatch;
 import com.sk89q.worldedit.util.auth.AuthorizationException;
 import com.sk89q.worldedit.util.formatting.component.InvalidComponentException;
 import com.sk89q.worldguard.WorldGuard;
-import com.sk89q.worldguard.domains.registry.InvalidDomainFormatException;
 import com.sk89q.worldguard.protection.managers.storage.StorageException;
 import com.sk89q.worldguard.protection.util.UnresolvedNamesException;
 
@@ -79,7 +78,7 @@ public class WorldGuardExceptionConverter extends ExceptionConverterHelper {
 
     @ExceptionMatch
     public void convert(InterruptedException e) throws CommandException {
-        throw newCommandException("Задача была отменена.", e);
+        throw newCommandException("Задача была прервана.", e);
     }
 
     @ExceptionMatch
@@ -89,11 +88,6 @@ public class WorldGuardExceptionConverter extends ExceptionConverterHelper {
 
     @ExceptionMatch
     public void convert(UnresolvedNamesException e) throws CommandException {
-        throw newCommandException(e.getMessage(), e);
-    }
-
-    @ExceptionMatch
-    public void convert(InvalidDomainFormatException e) throws CommandException {
         throw newCommandException(e.getMessage(), e);
     }
 

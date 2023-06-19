@@ -40,7 +40,7 @@ public class DebuggingCommands {
         this.worldGuard = worldGuard;
     }
 
-    @Command(aliases = {"testbreak"}, usage = "[player]", desc = "Имитировать разрушение блока", min = 1, max = 1, flags = "ts")
+    @Command(aliases = {"testbreak"}, usage = "[игрок]", desc = "Имитировать разрушение блока", min = 1, max = 1, flags = "ts")
     @CommandPermissions("worldguard.debug.event")
     public void fireBreakEvent(CommandContext args, final Actor sender) throws CommandException {
         LocalPlayer target = worldGuard.getPlatform().getMatcher().matchSinglePlayer(sender, args.getString(0));

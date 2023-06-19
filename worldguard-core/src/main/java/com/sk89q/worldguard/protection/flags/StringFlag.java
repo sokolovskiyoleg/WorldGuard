@@ -57,7 +57,7 @@ public class StringFlag extends Flag<String> {
     }
 
     @Override
-    public String parseInput(FlagContext context) throws InvalidFlagFormatException {
+    public String parseInput(FlagContext context) throws InvalidFlagFormat {
         String lines = context.getUserInput().replaceAll("(?<!\\\\)\\\\n", "\n").replaceAll("\\\\\\\\n", "\\\\n");
         // Add color codes
         lines = CommandUtils.replaceColorMacros(lines);

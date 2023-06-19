@@ -25,27 +25,16 @@ import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.minecraft.util.commands.CommandPermissionsException;
 import com.sk89q.worldedit.command.util.AsyncCommandBuilder;
 import com.sk89q.worldedit.extension.platform.Actor;
-import com.sk89q.worldedit.util.formatting.component.ErrorFormat;
-import com.sk89q.worldedit.util.formatting.text.Component;
-import com.sk89q.worldedit.util.formatting.text.TextComponent;
-import com.sk89q.worldedit.util.formatting.text.event.ClickEvent;
-import com.sk89q.worldedit.util.formatting.text.event.HoverEvent;
-import com.sk89q.worldedit.util.formatting.text.format.TextColor;
+import com.sk89q.worldedit.util.auth.AuthorizationException;
 import com.sk89q.worldedit.world.World;
 import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.domains.DefaultDomain;
-import com.sk89q.worldguard.domains.registry.DomainFactory;
-import com.sk89q.worldguard.domains.registry.DomainRegistry;
-import com.sk89q.worldguard.internal.permission.RegionPermissionModel;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.util.DomainInputResolver;
 import com.sk89q.worldguard.protection.util.DomainInputResolver.UserLocatorPolicy;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Map;
 import java.util.concurrent.Callable;
 
 public class MemberCommands extends RegionCommandsBase {
@@ -78,11 +67,9 @@ public class MemberCommands extends RegionCommandsBase {
         DomainInputResolver resolver = new DomainInputResolver(
                 WorldGuard.getInstance().getProfileService(), args.getParsedPaddedSlice(1, 0));
         resolver.setLocatorPolicy(args.hasFlag('n') ? UserLocatorPolicy.NAME_ONLY : UserLocatorPolicy.UUID_ONLY);
-        resolver.setActor(sender);
-        resolver.setRegion(region);
 
 
-        final String description = String.format("Добавление участника '%s' в регион '%s'", region.getId(), world.getName());
+        final String description = String.format("обавление участника '%s' в регион '%s'", region.getId(), world.getName());
         AsyncCommandBuilder.wrap(resolver, sender)
                 .registerWithSupervisor(worldGuard.getSupervisor(), description)
                 .onSuccess(String.format("Регион '%s' обновлен с новым участником.", region.getId()), region.getMembers()::addAll)
@@ -114,8 +101,7 @@ public class MemberCommands extends RegionCommandsBase {
         DomainInputResolver resolver = new DomainInputResolver(
                 WorldGuard.getInstance().getProfileService(), args.getParsedPaddedSlice(1, 0));
         resolver.setLocatorPolicy(args.hasFlag('n') ? UserLocatorPolicy.NAME_ONLY : UserLocatorPolicy.UUID_ONLY);
-        resolver.setActor(sender);
-        resolver.setRegion(region);
+
 
         final String description = String.format("Добавление владельца '%s' в регион '%s'", region.getId(), world.getName());
         AsyncCommandBuilder.wrap(checkedAddOwners(sender, manager, region, world, resolver), sender)
@@ -188,8 +174,6 @@ public class MemberCommands extends RegionCommandsBase {
             DomainInputResolver resolver = new DomainInputResolver(
                     WorldGuard.getInstance().getProfileService(), args.getParsedPaddedSlice(1, 0));
             resolver.setLocatorPolicy(args.hasFlag('n') ? UserLocatorPolicy.NAME_ONLY : UserLocatorPolicy.UUID_AND_NAME);
-            resolver.setActor(sender);
-            resolver.setRegion(region);
 
             callable = resolver;
         }
@@ -233,8 +217,6 @@ public class MemberCommands extends RegionCommandsBase {
             DomainInputResolver resolver = new DomainInputResolver(
                     WorldGuard.getInstance().getProfileService(), args.getParsedPaddedSlice(1, 0));
             resolver.setLocatorPolicy(args.hasFlag('n') ? UserLocatorPolicy.NAME_ONLY : UserLocatorPolicy.UUID_AND_NAME);
-            resolver.setActor(sender);
-            resolver.setRegion(region);
 
             callable = resolver;
         }

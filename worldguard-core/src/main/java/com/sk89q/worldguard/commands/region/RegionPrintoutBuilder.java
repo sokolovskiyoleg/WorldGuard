@@ -317,7 +317,6 @@ public class RegionPrintoutBuilder implements Callable<TextComponent> {
                     .clickEvent(ClickEvent.of(ClickEvent.Action.RUN_COMMAND, "/rg select " + region.getId()));
         }
         builder.append(bound);
-        builder.append(TextComponent.of("\n§aРазмер: §e" + region.volume()));
         final Location teleFlag = FlagValueCalculator.getEffectiveFlagOf(region, Flags.TELE_LOC, perms != null && perms.getSender() instanceof RegionAssociable ? (RegionAssociable) perms.getSender() : null);
         if (teleFlag != null && perms != null && perms.mayTeleportTo(region)) {
             builder.append(TextComponent.space().append(TextComponent.of("[Телепортация]", TextColor.GRAY)
@@ -335,7 +334,6 @@ public class RegionPrintoutBuilder implements Callable<TextComponent> {
                     .clickEvent(ClickEvent.of(ClickEvent.Action.RUN_COMMAND,
                             "/rg tp -c -w \"" + world + "\" " + region.getId()))));
         }
-        builder.append(TextComponent.of("\n§c§lБудьте внимательны! Не добавляйте в приват кого попало!§r"));
 
         newline();
     }

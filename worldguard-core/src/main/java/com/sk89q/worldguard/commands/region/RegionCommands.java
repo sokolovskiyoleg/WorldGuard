@@ -59,7 +59,7 @@ import com.sk89q.worldguard.protection.FlagValueCalculator;
 import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.FlagContext;
 import com.sk89q.worldguard.protection.flags.Flags;
-import com.sk89q.worldguard.protection.flags.InvalidFlagFormatException;
+import com.sk89q.worldguard.protection.flags.InvalidFlagFormat;
 import com.sk89q.worldguard.protection.flags.RegionGroup;
 import com.sk89q.worldguard.protection.flags.RegionGroupFlag;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
@@ -160,7 +160,7 @@ public final class RegionCommands extends RegionCommandsBase {
             region = checkRegionFromSelection(sender, id);
         }
 
-        RegionAdder task = new RegionAdder(manager, region, sender);
+        RegionAdder task = new RegionAdder(manager, region);
         task.addOwnersFromCommand(args, 2);
 
         final String description = String.format("Добавление региона '%s'", region.getId());
@@ -214,7 +214,7 @@ public final class RegionCommands extends RegionCommandsBase {
 
         region.copyFrom(existing);
 
-        RegionAdder task = new RegionAdder(manager, region, sender);
+        RegionAdder task = new RegionAdder(manager, region);
 
         final String description = String.format("Обновление региона '%s'", region.getId());
         AsyncCommandBuilder.wrap(task, sender)
@@ -302,7 +302,7 @@ public final class RegionCommands extends RegionCommandsBase {
 
         if (wcfg.maxClaimVolume >= Integer.MAX_VALUE) {
             throw new CommandException("Этот регион слишком большой. " +
-                    "Максимальный размер: " + Integer.MAX_VALUE+ ".");
+                    "Максимальный размер " + Integer.MAX_VALUE + ".");
         }
 
         // Check claim volume
@@ -313,7 +313,7 @@ public final class RegionCommands extends RegionCommandsBase {
 
             if (region.volume() > wcfg.maxClaimVolume) {
                 player.printError("Вы не можете заприватить регион такого размера.");
-                player.printError("Максимальный размер: " + wcfg.maxClaimVolume + ", размер твоего региона: " + region.volume());
+                player.printError("Максимальный размер: " + wcfg.maxClaimVolume + ", размер вашего региона: " + region.volume());
                 return;
             }
         }
@@ -587,7 +587,7 @@ public final class RegionCommands extends RegionCommandsBase {
             // the [value] part throws an error.
             try {
                 groupValue = groupFlag.parseInput(FlagContext.create().setSender(sender).setInput(group).setObject("region", existing).build());
-            } catch (InvalidFlagFormatException e) {
+            } catch (InvalidFlagFormat e) {
                 throw new CommandException(e.getMessage());
             }
 
@@ -598,7 +598,7 @@ public final class RegionCommands extends RegionCommandsBase {
             // Set the flag if [value] was given even if [-g group] was given as well
             try {
                 value = setFlag(existing, foundFlag, sender, value).toString();
-            } catch (InvalidFlagFormatException e) {
+            } catch (InvalidFlagFormat e) {
                 throw new CommandException(e.getMessage());
             }
 
@@ -663,7 +663,7 @@ public final class RegionCommands extends RegionCommandsBase {
         ProtectedRegion region;
         if (args.argsLength() == 0) { // Get region from where the player is
             if (!(sender instanceof LocalPlayer)) {
-                throw new CommandException("Пожалуйста, укажите регион с помощью команды /region info -w world_name region_name.");
+                throw new CommandException("ожалуйста, укажите регион с помощью команды /region info -w world_name region_name.");
             }
 
             region = checkRegionStandingIn(manager, (LocalPlayer) sender, true,

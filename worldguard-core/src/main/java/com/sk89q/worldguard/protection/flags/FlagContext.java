@@ -21,28 +21,106 @@ package com.sk89q.worldguard.protection.flags;
 
 import com.google.common.collect.Maps;
 import com.sk89q.worldedit.extension.platform.Actor;
+import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.WorldGuard;
-import com.sk89q.worldguard.commands.CommandInputContext;
 
-import javax.annotation.Nullable;
 import java.util.Map;
 
-public final class FlagContext extends CommandInputContext<InvalidFlagFormatException> {
+import javax.annotation.Nullable;
+
+public final class FlagContext {
+
+    private final Actor sender;
+    private final String input;
+
+    private Map<String, Object> context;
 
     private FlagContext(Actor sender, String input, Map<String, Object> values) {
-        super(sender, input, values);
+        this.sender = sender;
+        this.input = input;
+        this.context = values;
     }
 
-    public static FlagContext.FlagContextBuilder create() {
+    public static FlagContextBuilder create() {
         return new FlagContextBuilder();
+    }
+
+    public void put(String name, Object value) {
+        context.put(name, value);
+    }
+
+    public Actor getSender() {
+        return sender;
+    }
+
+    public String getUserInput() {
+        return input;
+    }
+
+    /**
+     * Gets the CommandSender as a player.
+     *
+     * @return Player
+     * @throws InvalidFlagFormat if the sender is not a player
+     */
+    public LocalPlayer getPlayerSender() throws InvalidFlagFormat {
+        if (sender.isPlayer() && sender instanceof LocalPlayer) {
+            return (LocalPlayer) sender;
+        } else {
+            throw new InvalidFlagFormat("Not a player");
+        }
+    }
+
+    public Integer getUserInputAsInt() throws InvalidFlagFormat {
+        try {
+            return Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            throw new InvalidFlagFormat("Not a number: " + input);
+        }
+    }
+
+    public Double getUserInputAsDouble() throws InvalidFlagFormat {
+        try {
+            return Double.parseDouble(input);
+        } catch (NumberFormatException e) {
+            throw new InvalidFlagFormat("Not a number: " + input);
+        }
+    }
+
+    /**
+     * Get an object from the context by key name.
+     * May return null if the object does not exist in the context.
+     *
+     * @param name key name of the object
+     * @return the object matching the key, or null
+     */
+    @Nullable
+    public Object get(String name) {
+        return get(name, null);
+    }
+
+    /**
+     * Get an object from the context by key name.
+     * Will only return null if
+     *  a) you provide null as the default
+     *  b) the key has explicity been set to null
+     *
+     * @param name key name of the object
+     * @return the object matching the key
+     */
+    @Nullable
+    public Object get(String name, Object defaultValue) {
+        Object obj;
+        return (((obj = context.get(name)) != null) || context.containsKey(name)
+            ? obj : defaultValue);
     }
 
     /**
      * Create a copy of this FlagContext, with optional substitutions for values
      *
-     * <p>If any supplied variable is null, it will be ignored.
+     * If any supplied variable is null, it will be ignored.
      * If a map is supplied, it will override this FlagContext's values of the same key,
-     * but unprovided keys will not be overriden and will be returned as shallow copies.</p>
+     * but unprovided keys will not be overriden and will be returned as shallow copies.
      *
      * @param commandSender CommandSender for the new FlagContext to run under
      * @param s String of the user input for the new FlagContext
@@ -56,11 +134,6 @@ public final class FlagContext extends CommandInputContext<InvalidFlagFormatExce
             map.putAll(values);
         }
         return new FlagContext(commandSender == null ? this.sender : commandSender, s == null ? this.input : s, map);
-    }
-
-    @Override
-    protected InvalidFlagFormatException createException(String str) {
-        return new InvalidFlagFormatException(str);
     }
 
     public static class FlagContextBuilder {

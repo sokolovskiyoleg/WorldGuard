@@ -96,8 +96,8 @@ public abstract class YamlConfigurationManager extends ConfigurationManager {
         if (!useSqlDatabase) {
             config.removeProperty("regions.sql");
         } else {
-            log.warning("SQL support for WorldGuard region storage is deprecated for removal in a future version. Please migrate to YAML storage.");
-            log.warning("For details, see https://worldguard.enginehub.org/en/latest/regions/storage/");
+            log.warning("Поддержка SQL для хранилища региона WorldGuard устарела и будет удалена в будущей версии. Пожалуйста, перейдите на хранилище YAML.");
+            log.warning("Подробнее смотрите на https://worldguard.enginehub.org/en/latest/regions/storage/");
         }
 
         DataSourceConfig dataSourceConfig = new DataSourceConfig(sqlDsn, sqlUsername, sqlPassword, sqlTablePrefix);

@@ -265,12 +265,12 @@ public class RegionProtectionListener extends AbstractListener {
             /* Inventory for blocks with the possibility to be only use, e.g. lectern */
             } else if (handleAsInventoryUsage(event.getOriginalEvent())) {
                 canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.CHEST_ACCESS));
-                what = "take that";
+                what = "брать это";
 
             /* Anvils */
             } else if (Materials.isAnvil(type)) {
                 canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.USE_ANVIL));
-                what = "use that";
+                what = "использовать это";
 
             /* Beds */
             } else if (Materials.isBed(type)) {
@@ -280,12 +280,12 @@ public class RegionProtectionListener extends AbstractListener {
             /* Respawn Anchors */
             } else if(type == Material.RESPAWN_ANCHOR) {
                 canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.INTERACT, Flags.RESPAWN_ANCHORS));
-                what = "использовать взрывчатку";
+                what = "использовать якоря";
 
             /* TNT */
             } else if (type == Material.TNT) {
                 canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.INTERACT, Flags.TNT));
-                what = "использовать это";
+                what = "использовать взрывчатку";
 
             /* Legacy USE flag */
             } else if (Materials.isUseFlagApplicable(type)) {

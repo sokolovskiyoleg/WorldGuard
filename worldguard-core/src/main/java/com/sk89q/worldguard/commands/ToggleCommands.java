@@ -94,7 +94,7 @@ public class ToggleCommands {
             worldGuard.getPlatform().broadcastNotification(LabelFormat.wrap("Распространение огня в мире '" + world.getName() + "' было включено администратором "
                     + sender.getDisplayName() + "."));
         } else {
-            sender.print("Распространение огня включено во всех мирах.");
+            sender.print("Fire spread was already globally enabled.");
         }
 
         wcfg.fireSpreadDisableToggle = false;

@@ -74,12 +74,12 @@ public class EnumFlag<T extends Enum<T>> extends Flag<T> {
     }
 
     @Override
-    public T parseInput(FlagContext context) throws InvalidFlagFormatException {
+    public T parseInput(FlagContext context) throws InvalidFlagFormat {
         String input = context.getUserInput();
         try {
             return findValue(input);
         } catch (IllegalArgumentException e) {
-            throw new InvalidFlagFormatException("Неизвестное значение '" + input + "' in "
+            throw new InvalidFlagFormat("Неизвестное значение '" + input + "' в "
                     + enumClass.getName());
         }
     }

@@ -45,7 +45,7 @@ public class WorldHeightMigration extends AbstractMigration {
             maxField = ProtectedRegion.class.getDeclaredField("max");
             maxField.setAccessible(true);
         } catch (NoSuchFieldException e) {
-            throw new ExceptionInInitializerError(new MigrationException("Migrator broke.", e));
+            throw new ExceptionInInitializerError(new MigrationException("Мигратор сломался.", e));
         }
     }
 
@@ -63,14 +63,14 @@ public class WorldHeightMigration extends AbstractMigration {
     protected void migrate(RegionDatabase store) throws MigrationException {
         if (world != null && !store.getName().equals(world.getName())) return;
 
-        log.log(Level.INFO, "Migrating regions in '" + store.getName() + "' to new height limits...");
+        log.log(Level.INFO, "Миграция регионов в '" + store.getName() + "' к новым пределам высоты...");
 
         Set<ProtectedRegion> regions;
 
         try {
             regions = store.loadAll(flagRegistry);
         } catch (StorageException e) {
-            throw new MigrationException("Failed to load region data for the world '" + store.getName() + "'", e);
+            throw new MigrationException("Не удалось загрузить данные региона для всего мира. '" + store.getName() + "'", e);
         }
 
         int min = -64;
@@ -93,7 +93,7 @@ public class WorldHeightMigration extends AbstractMigration {
         try {
             store.saveAll(regions);
         } catch (StorageException e) {
-            throw new MigrationException("Failed to save region data after migration of the world '" + store.getName() + "'", e);
+            throw new MigrationException("Не удалось сохранить данные региона после переноса мира '" + store.getName() + "'", e);
         }
     }
 
@@ -103,12 +103,12 @@ public class WorldHeightMigration extends AbstractMigration {
             maxField.set(region, region.getMaximumPoint().withY(max));
             region.setDirty(true);
         } catch (IllegalAccessException e) {
-            throw new MigrationException("Migrator broke.", e);
+            throw new MigrationException("Мигратор сломался.", e);
         }
     }
 
     @Override
     protected void postMigration() {
-        log.log(Level.INFO, "A total of " + changed + " top-to-bottom regions were vertically expanded.");
+        log.log(Level.INFO, "В общей сложности " + changed + " области сверху вниз были расширены по вертикали.");
     }
 }

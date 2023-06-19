@@ -278,7 +278,7 @@ public class RegionContainerImpl {
                             RegionManager manager = createAndLoad(normal.toString());
                             mapping.put(normal, manager);
                             it.remove();
-                            log.info("Данные региона для '" + normal.toString() + "' успешно загруженны");
+                            log.info("Данные региона для '" + normal.toString() + "' успешно загруженны '" + normal.toString() + "'");
                         } catch (StorageException e) {
                             if (e.getCause() != null && e.getCause().getMessage().equals(lastMsg)) {
                                 // if it's the same error, don't print a whole stacktrace

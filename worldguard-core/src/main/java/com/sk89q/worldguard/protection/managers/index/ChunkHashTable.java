@@ -79,7 +79,7 @@ public class ChunkHashTable implements ConcurrentRegionIndex {
      */
     private ListeningExecutorService createExecutor() {
         return MoreExecutors.listeningDecorator(EvenMoreExecutors.newBoundedCachedThreadPool(0, 4, Integer.MAX_VALUE,
-                "Таблица чанков региона WorldGuard - " + name));
+                "WorldGuard Region Chunk Table - " + name));
     }
 
     /**

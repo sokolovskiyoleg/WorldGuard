@@ -33,7 +33,7 @@ public class CommandStringFlag extends Flag<String> {
     }
 
     @Override
-    public String parseInput(FlagContext context) throws InvalidFlagFormatException {
+    public String parseInput(FlagContext context) throws InvalidFlagFormat {
         String input = context.getUserInput();
         input = input.trim();
         if (!input.startsWith("/")) {

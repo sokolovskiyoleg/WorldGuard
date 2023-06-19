@@ -24,8 +24,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.sk89q.minecraft.util.commands.CommandException;
-import com.sk89q.worldguard.domains.registry.DomainRegistry;
-import com.sk89q.worldguard.domains.registry.SimpleDomainRegistry;
 import com.sk89q.worldguard.util.profile.cache.HashMapCache;
 import com.sk89q.worldguard.util.profile.cache.ProfileCache;
 import com.sk89q.worldguard.util.profile.cache.SQLiteCache;
@@ -57,7 +55,6 @@ public final class WorldGuard {
 
     private WorldGuardPlatform platform;
     private final SimpleFlagRegistry flagRegistry = new SimpleFlagRegistry();
-    private final SimpleDomainRegistry domainRegistry = new SimpleDomainRegistry();
     private final Supervisor supervisor = new SimpleSupervisor();
     private ProfileCache profileCache;
     private ProfileService profileService;
@@ -117,16 +114,6 @@ public final class WorldGuard {
      */
     public FlagRegistry getFlagRegistry() {
         return this.flagRegistry;
-    }
-
-
-    /**
-     * Get the domain registry.
-     *
-     * @return the domain registry
-     */
-    public DomainRegistry getDomainRegistry() {
-        return this.domainRegistry;
     }
 
     /**
@@ -197,7 +184,7 @@ public final class WorldGuard {
         executorService.shutdown();
 
         try {
-            logger.log(Level.INFO, "Завершение работы исполнителя и отмена всех отложенных задач...");
+            logger.log(Level.INFO, "Shutting down executor and cancelling any pending tasks...");
 
             List<Task<?>> tasks = supervisor.getTasks();
             if (!tasks.isEmpty()) {

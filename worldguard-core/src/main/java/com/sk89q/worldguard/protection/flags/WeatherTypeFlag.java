@@ -40,12 +40,12 @@ public class WeatherTypeFlag extends Flag<WeatherType> {
     }
 
     @Override
-    public WeatherType parseInput(FlagContext context) throws InvalidFlagFormatException {
+    public WeatherType parseInput(FlagContext context) throws InvalidFlagFormat {
         String input = context.getUserInput();
         input = input.trim();
         WeatherType weatherType = unmarshal(input);
         if (weatherType == null) {
-            throw new InvalidFlagFormatException("Неизвестный тип погоды: " + input);
+            throw new InvalidFlagFormat("Неизвестный тип погоды: " + input);
         }
         return weatherType;
     }

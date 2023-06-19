@@ -58,7 +58,7 @@ public final class RegionDatabaseUtils {
                 try {
                     target.setParent(parent);
                 } catch (CircularInheritanceException e) {
-                    log.warning("Обнаружено циклическое наследование! Не удается установить родителя из '" + target + "' для родителя '" + parent.getId() + "'");
+                    log.warning("Обнаружено циклическое наследование! Не удается установить родителя из '" + target + "' для родителя '" + target + "' to parent '" + parent.getId() + "'");
                 }
             } else {
                 log.warning("Неизвестный родитель региона: " + entry.getValue());

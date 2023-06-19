@@ -35,10 +35,18 @@ public class MapFlag<K, V> extends Flag<Map<K, V>> {
     private final Flag<K> keyFlag;
     private final Flag<V> valueFlag;
 
+    public MapFlag(final String name, final Flag<K> keyFlag, final Flag<V> valueFlag) {
+        super(name);
+        requireNonNull(keyFlag, "keyFlag не может быть нулевым.");
+        requireNonNull(valueFlag, "valueFlag не может быть нулевым.");
+        this.keyFlag = keyFlag;
+        this.valueFlag = valueFlag;
+    }
+
     public MapFlag(final String name, @Nullable final RegionGroup defaultGroup, final Flag<K> keyFlag, final Flag<V> valueFlag) {
         super(name, defaultGroup);
-        requireNonNull(keyFlag, "keyFlag не должно быть пустым.");
-        requireNonNull(valueFlag, "valueFlag не должно быть пустым.");
+        requireNonNull(keyFlag, "keyFlag не может быть нулевым.");
+        requireNonNull(valueFlag, "valueFlag не может быть нулевым.");
         this.keyFlag = keyFlag;
         this.valueFlag = valueFlag;
     }
@@ -62,7 +70,7 @@ public class MapFlag<K, V> extends Flag<Map<K, V>> {
     }
 
     @Override
-    public Map<K, V> parseInput(final FlagContext context) throws InvalidFlagFormatException {
+    public Map<K, V> parseInput(final FlagContext context) throws InvalidFlagFormat {
 
         final String input = context.getUserInput();
         if (input.isEmpty()) {
@@ -75,7 +83,7 @@ public class MapFlag<K, V> extends Flag<Map<K, V>> {
             final char split = str.indexOf('=') == -1 ? ':' : '=';
             final String[] keyVal = str.split(String.valueOf(split));
             if (keyVal.length != 2) {
-                throw new InvalidFlagFormatException("Входные данные должны быть в формате 'key:value,key1=value1'. Можно использовать ':' или '='.");
+                throw new InvalidFlagFormat("Входные данные должны быть в формате 'key:value,key1=value1'. Можно использовать ':' или '='.");
             }
 
             final FlagContext key = context.copyWith(null, keyVal[0], null);

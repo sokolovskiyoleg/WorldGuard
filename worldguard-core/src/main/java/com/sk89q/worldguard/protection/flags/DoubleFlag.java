@@ -33,7 +33,7 @@ public class DoubleFlag extends NumberFlag<Double> {
     }
 
     @Override
-    public Double parseInput(FlagContext context) throws InvalidFlagFormatException {
+    public Double parseInput(FlagContext context) throws InvalidFlagFormat {
         return context.getUserInputAsDouble();
     }
 

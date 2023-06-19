@@ -246,7 +246,7 @@ public class BukkitWorldConfiguration extends YamlWorldConfiguration {
         signChestProtection = getBoolean("chest-protection.enable", false);
         disableSignChestProtectionCheck = getBoolean("chest-protection.disable-off-check", true);
         if (signChestProtection) {
-            log.warning("Защита сундука на основе таблички устарела и будет удаления в будущей версии. Смотрите детали на https://worldguard.enginehub.org/en/latest/chest-protection/.");
+            log.warning("Защита сундука на основе таблички устарела и будет удаления в будущей версии. Смотрите детали на https://worldguard.enginehub.org/en/latest/chest-protection/");
         } else {
             needParentSave |= removeProperty("chest-protection");
         }
@@ -401,7 +401,7 @@ public class BukkitWorldConfiguration extends YamlWorldConfiguration {
                     : "(" + worldName + ") Огниво РАЗРЕШЕНО.");
             log.log(Level.INFO, preventLavaFire
                     ? "(" + worldName + ") Распространение огня лавы ЗАБЛОКИРОВАНО."
-                    : "(" + worldName + ") Распространение огня лавы РАЗРЕШЕНО.");
+                    : "(" + worldName + ") Распространение огня лавы РАЗРЕШЕНО");
 
             if (disableFireSpread) {
                 log.log(Level.INFO, "(" + worldName + ") Все распространения огня отключены.");

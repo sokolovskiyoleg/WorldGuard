@@ -40,12 +40,12 @@ public class EntityTypeFlag extends Flag<EntityType> {
     }
 
     @Override
-    public EntityType parseInput(FlagContext context) throws InvalidFlagFormatException {
+    public EntityType parseInput(FlagContext context) throws InvalidFlagFormat {
         String input = context.getUserInput();
         input = input.trim();
         EntityType entityType = unmarshal(input);
         if (entityType == null) {
-            throw new InvalidFlagFormatException("Неизвестный тип сущности: " + input);
+            throw new InvalidFlagFormat("Неизвестный тип сущности: " + input);
         }
         return entityType;
     }

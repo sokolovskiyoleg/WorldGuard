@@ -394,7 +394,7 @@ public class WorldGuardPlugin extends JavaPlugin {
         if (worldEdit instanceof WorldEditPlugin) {
             return (WorldEditPlugin) worldEdit;
         } else {
-            throw new CommandException("Не удалось обнаружить WorldEdit (сообщите об ошибке).");
+            throw new CommandException("WorldEdit detection failed (report error).");
         }
     }
 

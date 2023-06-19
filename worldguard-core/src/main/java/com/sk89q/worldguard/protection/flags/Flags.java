@@ -227,7 +227,7 @@ public final class Flags {
      */
     @Deprecated
     public static final StringFlag ENTRY_DENY_MESSAGE = register(new StringFlag("entry-deny-message",
-            LegacyComponentSerializer.INSTANCE.serialize(TextComponent.of("").append(TextComponent.of("Hey!",
+            LegacyComponentSerializer.INSTANCE.serialize(TextComponent.of("").append(TextComponent.of("§8[§c§l!§8]",
                     TextColor.RED, Sets.newHashSet(TextDecoration.BOLD)))
                     .append(TextComponent.of(" К сожалению, Вам не разрешено входить в этот регион.", TextColor.GRAY)))));
     /**

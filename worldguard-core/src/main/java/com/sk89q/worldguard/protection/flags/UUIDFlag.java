@@ -33,7 +33,7 @@ public class UUIDFlag extends Flag<UUID> {
     }
 
     @Override
-    public UUID parseInput(FlagContext context) throws InvalidFlagFormatException {
+    public UUID parseInput(FlagContext context) throws InvalidFlagFormat {
         String input = context.getUserInput();
         if ("self".equalsIgnoreCase(input)) {
             return context.getSender().getUniqueId();
@@ -41,7 +41,7 @@ public class UUIDFlag extends Flag<UUID> {
         try {
             return UUID.fromString(input);
         } catch (IllegalArgumentException e) {
-            throw new InvalidFlagFormatException("Not a valid uuid: " + input);
+            throw new InvalidFlagFormat("Недействительный UUID: " + input);
         }
     }
 
