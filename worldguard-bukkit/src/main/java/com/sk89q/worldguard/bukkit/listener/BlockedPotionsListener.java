@@ -134,7 +134,7 @@ public class BlockedPotionsListener extends AbstractListener {
                         if (wcfg.blockPotionsAlways && (item.getType() == Material.SPLASH_POTION
                                 || item.getType() == Material.LINGERING_POTION)) {
                             player.sendMessage(ChatColor.RED + "К сожалению, стрелы с " +
-                                    blockedEffect.getName() + " ельзя бросить, " +
+                                    blockedEffect.getName() + " нельзя бросить, " +
                                     "даже если у вас есть разрешение обойти это, " +
                                     "из-за ограничений (и из-за чрезмерно надежной блокировки зелья).");
                             event.setCancelled(true);

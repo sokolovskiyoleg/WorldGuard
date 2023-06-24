@@ -324,7 +324,7 @@ class FlagHelperBox extends PaginationBox {
                                 .decoration(TextDecoration.UNDERLINED, true))
                         .append(TextComponent.of(" value"));
             } else {
-                valType = TextComponent.of("аследуемое значение");
+                valType = TextComponent.of("наследуемое значение");
             }
         } else {
             if (currVal == defVal) {

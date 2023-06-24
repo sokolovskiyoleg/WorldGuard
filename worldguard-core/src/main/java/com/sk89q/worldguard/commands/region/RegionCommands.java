@@ -663,7 +663,7 @@ public final class RegionCommands extends RegionCommandsBase {
         ProtectedRegion region;
         if (args.argsLength() == 0) { // Get region from where the player is
             if (!(sender instanceof LocalPlayer)) {
-                throw new CommandException("ожалуйста, укажите регион с помощью команды /region info -w world_name region_name.");
+                throw new CommandException("Пожалуйста, укажите регион с помощью команды /region info -w world_name region_name.");
             }
 
             region = checkRegionStandingIn(manager, (LocalPlayer) sender, true,

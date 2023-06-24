@@ -69,7 +69,7 @@ public class MemberCommands extends RegionCommandsBase {
         resolver.setLocatorPolicy(args.hasFlag('n') ? UserLocatorPolicy.NAME_ONLY : UserLocatorPolicy.UUID_ONLY);
 
 
-        final String description = String.format("обавление участника '%s' в регион '%s'", region.getId(), world.getName());
+        final String description = String.format("добавление участника '%s' в регион '%s'", region.getId(), world.getName());
         AsyncCommandBuilder.wrap(resolver, sender)
                 .registerWithSupervisor(worldGuard.getSupervisor(), description)
                 .onSuccess(String.format("Регион '%s' обновлен с новым участником.", region.getId()), region.getMembers()::addAll)
