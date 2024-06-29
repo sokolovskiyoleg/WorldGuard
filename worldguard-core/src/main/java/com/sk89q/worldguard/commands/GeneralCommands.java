@@ -70,7 +70,7 @@ public class GeneralCommands {
 
                     // Keep track of this
                     included = true;
-                } else {
+                } else if (!args.hasFlag('s')) {
                     player.print("Режим бога включен для " + sender.getDisplayName() + ".");
 
                 }
@@ -79,8 +79,13 @@ public class GeneralCommands {
         
         // The player didn't receive any items, then we need to send the
         // user a message so s/he know that something is indeed working
+<<<<<<< HEAD
         if (!included && args.hasFlag('s')) {
             sender.print("У игроков теперь есть режим Бога.");
+=======
+        if (!included) {
+            sender.print("Players now have god mode.");
+>>>>>>> fa357f46816eba773278a65aadfc7fd64d1a361c
         }
     }
     
@@ -113,8 +118,13 @@ public class GeneralCommands {
 
                     // Keep track of this
                     included = true;
+<<<<<<< HEAD
                 } else {
                     player.print("Режим Бога отключен для игрока " + sender.getDisplayName() + ".");
+=======
+                } else if (!args.hasFlag('s')) {
+                    player.print("God disabled by " + sender.getDisplayName() + ".");
+>>>>>>> fa357f46816eba773278a65aadfc7fd64d1a361c
 
                 }
             }
@@ -122,8 +132,13 @@ public class GeneralCommands {
         
         // The player didn't receive any items, then we need to send the
         // user a message so s/he know that something is indeed working
+<<<<<<< HEAD
         if (!included && args.hasFlag('s')) {
             sender.print("У игроков больше нет режима Бога.");
+=======
+        if (!included) {
+            sender.print("Players no longer have god mode.");
+>>>>>>> fa357f46816eba773278a65aadfc7fd64d1a361c
         }
     }
     
@@ -158,16 +173,26 @@ public class GeneralCommands {
                 
                 // Keep track of this
                 included = true;
+<<<<<<< HEAD
             } else {
                 player.print("Игрок " + sender.getDisplayName() + " исцелен.");
+=======
+            } else if (!args.hasFlag('s')) {
+                player.print("Healed by " + sender.getDisplayName() + ".");
+>>>>>>> fa357f46816eba773278a65aadfc7fd64d1a361c
                 
             }
         }
         
         // The player didn't receive any items, then we need to send the
         // user a message so s/he know that something is indeed working
+<<<<<<< HEAD
         if (!included && args.hasFlag('s')) {
             sender.print("Все игроки исцелены.");
+=======
+        if (!included) {
+            sender.print("Players healed.");
+>>>>>>> fa357f46816eba773278a65aadfc7fd64d1a361c
         }
     }
     
@@ -199,16 +224,26 @@ public class GeneralCommands {
                 
                 // Keep track of this
                 included = true;
+<<<<<<< HEAD
             } else {
                 player.print("Игрок " + sender.getDisplayName() + " был убит.");
+=======
+            } else if (!args.hasFlag('s')) {
+                player.print("Slain by " + sender.getDisplayName() + ".");
+>>>>>>> fa357f46816eba773278a65aadfc7fd64d1a361c
                 
             }
         }
         
         // The player didn't receive any items, then we need to send the
         // user a message so s/he know that something is indeed working
+<<<<<<< HEAD
         if (!included && args.hasFlag('s')) {
             sender.print("Все игроки убиты.");
+=======
+        if (!included) {
+            sender.print("Players slain.");
+>>>>>>> fa357f46816eba773278a65aadfc7fd64d1a361c
         }
     }
     

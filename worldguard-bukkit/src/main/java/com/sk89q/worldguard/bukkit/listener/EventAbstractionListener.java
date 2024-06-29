@@ -65,6 +65,7 @@ import org.bukkit.block.PistonMoveReaction;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Waterlogged;
 import org.bukkit.block.data.type.Dispenser;
+import org.bukkit.entity.AbstractWindCharge;
 import org.bukkit.entity.AreaEffectCloud;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Entity;
@@ -146,7 +147,6 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.Vector;
 
@@ -219,8 +219,8 @@ public class EventAbstractionListener extends AbstractListener {
             Events.fireToCancel(event, new BreakBlockEvent(event, create(event.getPlayer()), previousState.getLocation(), previousState.getType()));
         }
 
-        if (!event.isCancelled()) {
-            ItemStack itemStack = new ItemStack(event.getBlockPlaced().getType(), 1);
+        ItemStack itemStack = event.getItemInHand();
+        if (!event.isCancelled() && itemStack.getType() != Material.AIR) {
             Events.fireToCancel(event, new UseItemEvent(event, create(event.getPlayer()), event.getPlayer().getWorld(), itemStack));
         }
 
@@ -358,6 +358,13 @@ public class EventAbstractionListener extends AbstractListener {
     @EventHandler(ignoreCancelled = true)
     public void onEntityExplode(EntityExplodeEvent event) {
         Entity entity = event.getEntity();
+        if (entity instanceof AbstractWindCharge) {
+            UseBlockEvent useEvent = new UseBlockEvent(event, create(entity), event.getLocation().getWorld(), event.blockList(), Material.AIR);
+            useEvent.getRelevantFlags().add(Flags.WIND_CHARGE_BURST);
+            useEvent.setSilent(true);
+            Events.fireBulkEventToCancel(event, useEvent);
+            return;
+        }
         Events.fireBulkEventToCancel(event, new BreakBlockEvent(event, create(entity), event.getLocation().getWorld(), event.blockList(), Material.AIR));
         if (entity instanceof Creeper) {
             Cause.untrackParentCause(entity);
@@ -483,7 +490,7 @@ public class EventAbstractionListener extends AbstractListener {
                         firedEvent.setSilent(true);
                     }
                     interactDebounce.debounce(clicked, event.getPlayer(), event, firedEvent);
-                    if (event.useInteractedBlock() == Result.DENY) {
+                    if (event.useInteractedBlock() == Result.DENY && !firedEvent.isSilent()) {
                         playDenyEffect(player, clicked.getLocation().add(0, 1, 0));
                     }
                 }
@@ -1087,9 +1094,9 @@ public class EventAbstractionListener extends AbstractListener {
     public void onLingeringApply(AreaEffectCloudApplyEvent event) {
         AreaEffectCloud entity = event.getEntity();
         List<PotionEffect> effects = new ArrayList<>();
-        PotionEffectType baseEffectType = entity.getBasePotionData().getType().getEffectType();
-        if (baseEffectType != null) {
-            effects.add(new PotionEffect(baseEffectType, 0, 0));
+        List<PotionEffect> baseEffectTypes = entity.getBasePotionType() == null ? null : entity.getBasePotionType().getPotionEffects();
+        if (baseEffectTypes != null) {
+            effects.addAll(baseEffectTypes);
         }
         if (entity.hasCustomEffects()) {
             effects.addAll(entity.getCustomEffects());
@@ -1174,7 +1181,7 @@ public class EventAbstractionListener extends AbstractListener {
 
         if (item != null && item.getType() == Material.END_CRYSTAL) { /*&& placed.getType() == Material.BEDROCK) {*/ // in vanilla you can only place them on bedrock but who knows what plugins will add
                                                                                                                         // may be overprotective as a result, but better than being underprotective
-            Events.fireToCancel(event, new SpawnEntityEvent(event, cause, placed.getLocation().add(0.5, 0, 0.5), EntityType.ENDER_CRYSTAL));
+            Events.fireToCancel(event, new SpawnEntityEvent(event, cause, placed.getLocation().add(0.5, 0, 0.5), EntityType.END_CRYSTAL));
             return;
         }
 
