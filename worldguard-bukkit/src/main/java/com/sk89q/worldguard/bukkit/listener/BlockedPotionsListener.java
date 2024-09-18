@@ -72,41 +72,18 @@ public class BlockedPotionsListener extends AbstractListener {
 
     @EventHandler
     public void onProjectile(DamageEntityEvent event) {
-<<<<<<< HEAD
-        if (event.getOriginalEvent() instanceof EntityDamageByEntityEvent) {
-            EntityDamageByEntityEvent originalEvent = (EntityDamageByEntityEvent) event.getOriginalEvent();
-            if (Entities.isPotionArrow(originalEvent.getDamager())) { // should take care of backcompat
-                BukkitWorldConfiguration wcfg = getWorldConfig(event.getWorld());
-                PotionEffectType blockedEffect = null;
-                if (originalEvent.getDamager() instanceof SpectralArrow) {
-                    if (wcfg.blockPotions.contains(PotionEffectType.GLOWING)) {
-                        blockedEffect = PotionEffectType.GLOWING;
-                    }
-                } else if (originalEvent.getDamager() instanceof Arrow) {
-                    Arrow tippedArrow = (Arrow) originalEvent.getDamager();
-                    PotionEffectType baseEffect = tippedArrow.getBasePotionData().getType().getEffectType();
-                    if (wcfg.blockPotions.contains(baseEffect)) {
-                        blockedEffect = baseEffect;
-                    } else {
-                        for (PotionEffect potionEffect : tippedArrow.getCustomEffects()) {
-                            if (wcfg.blockPotions.contains(potionEffect.getType())) {
-                                blockedEffect = potionEffect.getType();
-                                break;
-                            }
-                        }
-                    }
-                }
-                if (blockedEffect != null) {
-                    Player player = event.getCause().getFirstPlayer();
-                    if (player != null) {
-                        if (getPlugin().hasPermission(player, "worldguard.override.potions")) {
-                            return;
-                        }
-                        player.sendMessage(ChatColor.RED + "К сожалению, стрелы с "
-                                + blockedEffect.getName() + " в настоящее время отключены.");
-                    }
-                    event.setCancelled(true);
-                }
+        if (!(event.getOriginalEvent() instanceof EntityDamageByEntityEvent originalEvent)) {
+            return;
+        }
+        if (!Entities.isPotionArrow(originalEvent.getDamager())) {
+            return;
+        }
+
+        BukkitWorldConfiguration wcfg = getWorldConfig(event.getWorld());
+        PotionEffectType blockedEffect = null;
+        if (originalEvent.getDamager() instanceof SpectralArrow) {
+            if (wcfg.blockPotions.contains(PotionEffectType.GLOWING)) {
+                blockedEffect = PotionEffectType.GLOWING;
             }
         } else if (originalEvent.getDamager() instanceof Arrow arrow) {
             blockedEffect = getBlockedEffectByArrow(arrow, wcfg);
