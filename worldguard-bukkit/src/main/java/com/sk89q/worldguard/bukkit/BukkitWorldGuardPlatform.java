@@ -172,8 +172,9 @@ public class BukkitWorldGuardPlatform implements WorldGuardPlatform {
     }
 
     @Override
+    @Deprecated(forRemoval = true)
     public void stackPlayerInventory(LocalPlayer localPlayer) {
-        boolean ignoreMax = localPlayer.hasPermission("worldguard.stack.illegitimate");
+        boolean ignoreMax = false; // localPlayer.hasPermission("worldguard.stack.illegitimate");
 
         Player player = ((BukkitPlayer) localPlayer).getPlayer();
 
@@ -191,7 +192,7 @@ public class BukkitWorldGuardPlatform implements WorldGuardPlatform {
                 continue;
             }
 
-            int max = ignoreMax ? 64 : item.getMaxStackSize();
+            int max = /*ignoreMax ? 64 :*/ item.getMaxStackSize();
 
             if (item.getAmount() < max) {
                 int needed = max - item.getAmount(); // Number of needed items until max
