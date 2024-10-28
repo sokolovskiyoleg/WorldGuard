@@ -171,8 +171,8 @@ public class BukkitWorldGuardPlatform implements WorldGuardPlatform {
         return WorldGuardPlugin.inst().getDataFolder().toPath();
     }
 
+    @SuppressWarnings("removal")
     @Override
-    @Deprecated(forRemoval = true)
     public void stackPlayerInventory(LocalPlayer localPlayer) {
         boolean ignoreMax = false; // localPlayer.hasPermission("worldguard.stack.illegitimate");
 
