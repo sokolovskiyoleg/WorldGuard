@@ -838,7 +838,6 @@ public final class Materials {
         MATERIAL_FLAGS.put(Material.PITCHER_CROP, 0);
         MATERIAL_FLAGS.put(Material.PINK_PETALS, 0);
         MATERIAL_FLAGS.put(Material.PITCHER_POD, 0);
-        MATERIAL_FLAGS.put(Material.NETHERITE_UPGRADE_SMITHING_TEMPLATE, 0);
 
         MATERIAL_FLAGS.put(Material.ARMADILLO_SCUTE, 0);
         MATERIAL_FLAGS.put(Material.WOLF_ARMOR, 0);
@@ -920,8 +919,22 @@ public final class Materials {
         putMaterialTag(Tag.CAULDRONS, MODIFIED_ON_RIGHT);
 
         // 1.20
-        putMaterialTag(Tag.ITEMS_TRIM_TEMPLATES, 0);
         putMaterialTag(Tag.ITEMS_DECORATED_POT_SHERDS, 0);
+
+        // 1.21(.4)
+        putMaterialTag(Tag.ITEMS_BUNDLES, 0);
+        MATERIAL_FLAGS.put(Material.FIELD_MASONED_BANNER_PATTERN, 0);
+        MATERIAL_FLAGS.put(Material.BORDURE_INDENTED_BANNER_PATTERN, 0);
+        MATERIAL_FLAGS.put(Material.PALE_MOSS_CARPET, 0);
+        MATERIAL_FLAGS.put(Material.PALE_HANGING_MOSS, 0);
+        MATERIAL_FLAGS.put(Material.PALE_MOSS_BLOCK, 0);
+        MATERIAL_FLAGS.put(Material.CREAKING_HEART, 0);
+        MATERIAL_FLAGS.put(Material.RESIN_CLUMP, 0);
+        MATERIAL_FLAGS.put(Material.RESIN_BLOCK, 0);
+        MATERIAL_FLAGS.put(Material.RESIN_BRICKS, 0);
+        MATERIAL_FLAGS.put(Material.CHISELED_RESIN_BRICKS, 0);
+        MATERIAL_FLAGS.put(Material.MACE, 0);
+        MATERIAL_FLAGS.put(Material.RESIN_BRICK, 0);
 
         Stream.concat(Stream.concat(
                 Tag.CORAL_BLOCKS.getValues().stream(),
@@ -941,6 +954,9 @@ public final class Materials {
                 MATERIAL_FLAGS.put(material, 0);
             }
             if (material.name().startsWith("MUSIC_DISC_")) {
+                MATERIAL_FLAGS.put(material, 0);
+            }
+            if (material.name().endsWith("_SMITHING_TEMPLATE")) {
                 MATERIAL_FLAGS.put(material, 0);
             }
             if (!MATERIAL_FLAGS.containsKey(material)) {
@@ -1197,6 +1213,7 @@ public final class Materials {
             case CHICKEN_SPAWN_EGG -> EntityType.CHICKEN;
             case COD_SPAWN_EGG -> EntityType.COD;
             case COW_SPAWN_EGG -> EntityType.COW;
+            case CREAKING_SPAWN_EGG -> EntityType.CREAKING;
             case CREEPER_SPAWN_EGG -> EntityType.CREEPER;
             case DOLPHIN_SPAWN_EGG -> EntityType.DOLPHIN;
             case DONKEY_SPAWN_EGG -> EntityType.DONKEY;
