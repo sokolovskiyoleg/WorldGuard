@@ -981,7 +981,7 @@ public class EventAbstractionListener extends AbstractListener {
 
     @EventHandler(ignoreCancelled = true)
     public void onInventoryOpen(InventoryOpenEvent event) {
-        InventoryHolder holder = event.getInventory().getHolder();
+        InventoryHolder holder = PaperLib.getHolder(event.getInventory(), false).getHolder();
         if (holder instanceof Entity && holder == event.getPlayer()) return;
 
         handleInventoryHolderUse(event, create(event.getPlayer()), holder);
