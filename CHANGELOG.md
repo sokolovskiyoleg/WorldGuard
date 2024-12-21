@@ -2,11 +2,12 @@
 
 ## 7.0.13 (beta)
 
-* Update to 1.21.3
+* Update to 1.21.4
 * Remove max-stack-size bypass in stack command
 * Fix a falling block metadata leak. (May still be problematic on Spigot, use Paper.)
 * Fix flame enchant being blocked as entity damage on the arrow itself.
 * More Paper-specific performance enhancements for hoppers.
+* Fix block-windcharge-explosions config option not doing anything.
 
 ## 7.0.12
 
