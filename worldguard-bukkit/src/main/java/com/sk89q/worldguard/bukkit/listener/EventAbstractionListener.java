@@ -348,7 +348,10 @@ public class EventAbstractionListener extends AbstractListener {
         } else if (toType == Material.AIR) {
             // Track the source so later we can create a proper chain of causes
             if (entity instanceof FallingBlock) {
-                Cause.trackParentCause(entity, block);
+                if (!PaperLib.isPaper()) {
+                    // On paper we use FallingBlock#getOrigin to get the origin location, on spigot we store it.
+                    Cause.trackParentCause(entity, block);
+                }
 
                 // Switch around the event
                 Events.fireToCancel(event, new SpawnEntityEvent(event, create(block), entity));
@@ -865,12 +868,7 @@ public class EventAbstractionListener extends AbstractListener {
         if (matchingItem != null && hasInteractBypass(world, matchingItem)) {
             useEntityEvent.setAllowed(true);
         }
-        if (!Events.fireToCancel(event, useEntityEvent)) {
-            // so this is a hack but CreeperIgniteEvent doesn't actually tell us who, so we need to do it here
-            if (item.getType() == Material.FLINT_AND_STEEL && entity.getType() == EntityType.CREEPER) {
-                Cause.trackParentCause(entity, player);
-            }
-        }
+        Events.fireToCancel(event, useEntityEvent);
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -984,7 +982,7 @@ public class EventAbstractionListener extends AbstractListener {
 
     @EventHandler(ignoreCancelled = true)
     public void onInventoryOpen(InventoryOpenEvent event) {
-        InventoryHolder holder = event.getInventory().getHolder();
+        InventoryHolder holder = PaperLib.getHolder(event.getInventory(), false).getHolder();
         if (holder instanceof Entity && holder == event.getPlayer()) return;
 
         handleInventoryHolderUse(event, create(event.getPlayer()), holder);
@@ -1199,7 +1197,7 @@ public class EventAbstractionListener extends AbstractListener {
 
         // Handle created boats
         if (item != null && Materials.isBoat(item.getType())) {
-            Events.fireToCancel(event, new SpawnEntityEvent(event, cause, placed.getLocation().add(0.5, 0, 0.5), EntityType.BOAT));
+            Events.fireToCancel(event, new SpawnEntityEvent(event, cause, placed.getLocation().add(0.5, 0, 0.5), Materials.getRelatedEntity(item.getType())));
             return;
         }
 
