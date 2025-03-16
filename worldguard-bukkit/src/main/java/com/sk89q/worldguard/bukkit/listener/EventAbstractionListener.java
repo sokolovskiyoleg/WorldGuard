@@ -126,6 +126,7 @@ import org.bukkit.event.entity.EntityTameEvent;
 import org.bukkit.event.entity.EntityUnleashEvent;
 import org.bukkit.event.entity.ExpBottleEvent;
 import org.bukkit.event.entity.LingeringPotionSplashEvent;
+import org.bukkit.event.entity.PlayerLeashEntityEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
@@ -941,9 +942,16 @@ public class EventAbstractionListener extends AbstractListener {
     }
 
     @EventHandler(ignoreCancelled = true)
+    public void onEntityLeash(PlayerLeashEntityEvent event) {
+        UseEntityEvent useEntityEvent = new UseEntityEvent(event, create(event.getPlayer()), event.getEntity());
+        useEntityEvent.getRelevantFlags().add(Flags.RIDE);
+        useEntityEvent.getRelevantFlags().add(Flags.INTERACT);
+        Events.fireToCancel(event, useEntityEvent);
+    }
+
+    @EventHandler(ignoreCancelled = true)
     public void onEntityUnleash(EntityUnleashEvent event) {
-        if (event instanceof PlayerUnleashEntityEvent) {
-            PlayerUnleashEntityEvent playerEvent = (PlayerUnleashEntityEvent) event;
+        if (event instanceof PlayerUnleashEntityEvent playerEvent) {
             Events.fireToCancel(playerEvent, new UseEntityEvent(playerEvent, create(playerEvent.getPlayer()), event.getEntity()));
         }
     }
