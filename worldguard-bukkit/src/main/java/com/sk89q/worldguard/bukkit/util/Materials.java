@@ -75,7 +75,8 @@ public final class Materials {
         ENTITY_ITEMS.put(EntityType.FURNACE_MINECART, Material.FURNACE_MINECART);
         ENTITY_ITEMS.put(EntityType.TNT_MINECART, Material.TNT_MINECART);
         ENTITY_ITEMS.put(EntityType.HOPPER_MINECART, Material.HOPPER_MINECART);
-        ENTITY_ITEMS.put(EntityType.POTION, Material.POTION);
+        ENTITY_ITEMS.put(EntityType.SPLASH_POTION, Material.SPLASH_POTION);
+        ENTITY_ITEMS.put(EntityType.LINGERING_POTION, Material.LINGERING_POTION);
         ENTITY_ITEMS.put(EntityType.EGG, Material.EGG);
         ENTITY_ITEMS.put(EntityType.ARMOR_STAND, Material.ARMOR_STAND);
         ENTITY_ITEMS.put(EntityType.END_CRYSTAL, Material.END_CRYSTAL);
@@ -935,6 +936,19 @@ public final class Materials {
         MATERIAL_FLAGS.put(Material.CHISELED_RESIN_BRICKS, 0);
         MATERIAL_FLAGS.put(Material.MACE, 0);
         MATERIAL_FLAGS.put(Material.RESIN_BRICK, 0);
+
+        // 1.21.5
+        MATERIAL_FLAGS.put(Material.BUSH, 0);
+        MATERIAL_FLAGS.put(Material.CACTUS_FLOWER, 0);
+        MATERIAL_FLAGS.put(Material.FIREFLY_BUSH, 0);
+        MATERIAL_FLAGS.put(Material.LEAF_LITTER, 0);
+        MATERIAL_FLAGS.put(Material.SHORT_DRY_GRASS, 0);
+        MATERIAL_FLAGS.put(Material.TALL_DRY_GRASS, 0);
+        MATERIAL_FLAGS.put(Material.WILDFLOWERS, 0);
+        MATERIAL_FLAGS.put(Material.TEST_BLOCK, MODIFIED_ON_RIGHT);
+        MATERIAL_FLAGS.put(Material.TEST_INSTANCE_BLOCK, MODIFIED_ON_RIGHT);
+        MATERIAL_FLAGS.put(Material.BLUE_EGG, 0);
+        MATERIAL_FLAGS.put(Material.BROWN_EGG, 0);
 
         Stream.concat(Stream.concat(
                 Tag.CORAL_BLOCKS.getValues().stream(),
