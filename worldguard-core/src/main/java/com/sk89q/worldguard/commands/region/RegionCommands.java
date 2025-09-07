@@ -168,7 +168,7 @@ public final class RegionCommands extends RegionCommandsBase {
                 .registerWithSupervisor(worldGuard.getSupervisor(), description)
                 .onSuccess((Component) null,
                         t -> {
-                            sender.print(String.format("Новый регион '%s' создан.", region.getId()));
+                            sender.print(String.format("§7Регион §a%s§7 создан.", region.getId()));
                             warnAboutDimensions(sender, region);
                             informNewUser(sender, manager, region);
                             checkSpawnOverlap(sender, world, region);
@@ -332,7 +332,7 @@ public final class RegionCommands extends RegionCommandsBase {
 
         region.getOwners().addPlayer(player);
         manager.addRegion(region);
-        player.print(TextComponent.of(String.format("Новый регион '%s' создан.", id)));
+        player.print(TextComponent.of(String.format("§7Регион §a%s§7 создан.", id)));
     }
 
     /**
@@ -603,7 +603,7 @@ public final class RegionCommands extends RegionCommandsBase {
             }
 
             if (!args.hasFlag('h')) {
-                sender.print("Флаг " + foundFlag.getName() + " в регионе '" + regionId + "' изменен на '" + value + "'.");
+                sender.print("§8[§a!§8] §7Флаг §a" + foundFlag.getName() + "§7 в регионе §a" + regionId + "§7 изменён на §8[§a" + value + "§8]§7.§r");
             }
 
         // No value? Clear the flag, if -g isn't specified
@@ -618,7 +618,7 @@ public final class RegionCommands extends RegionCommandsBase {
             }
 
             if (!args.hasFlag('h')) {
-                sender.print("Флаг " + foundFlag.getName() + " удален из региона '" + regionId + "'. (Для групп -g был также удален.)");
+                sender.print("§8[§a!§8] §7Флаг §a" + foundFlag.getName() + "§7 удалён из региона §a" + regionId + "§r");
             }
         }
 
@@ -727,7 +727,7 @@ public final class RegionCommands extends RegionCommandsBase {
 
         existing.setPriority(priority);
 
-        sender.print("Приоритет региона '" + existing.getId() + "' установлен на " + priority + " (более высокие числа переопределены).");
+        sender.print("§8[§a!§8] §7Приоритет региона §a" + existing.getId() + " §7установлен на §8[§a" + priority + "§8]§r");
         checkSpawnOverlap(sender, world, existing);
     }
 
@@ -838,8 +838,8 @@ public final class RegionCommands extends RegionCommandsBase {
                 .registerWithSupervisor(WorldGuard.getInstance().getSupervisor(), description)
                 .sendMessageAfterDelay("Пожалуйста, подождите...")
                 .onSuccess((Component) null, removed -> sender.print(TextComponent.of(
-                        "Регион " + removed.stream().map(ProtectedRegion::getId).collect(Collectors.joining(", ")) + " удален.",
-                        TextColor.LIGHT_PURPLE)))
+                        "§7Регион §a" + removed.stream().map(ProtectedRegion::getId).collect(Collectors.joining(", ")) + "§7 удалён.",
+                        TextColor.GRAY)))
                 .onFailure("Не удалось удалить регион", WorldGuard.getInstance().getExceptionConverter())
                 .buildAndExec(WorldGuard.getInstance().getExecutorService());
     }
