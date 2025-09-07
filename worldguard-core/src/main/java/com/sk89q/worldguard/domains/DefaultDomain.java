@@ -411,14 +411,14 @@ public class DefaultDomain implements Domain, ChangeTracked {
             final UUID uuid = profileMap.get(name);
             if (uuid == null) {
                 return TextComponent.of(name, TextColor.YELLOW)
-                        .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, TextComponent.of("Name only", TextColor.GRAY)
-                            .append(TextComponent.newline()).append(TextComponent.of("Click to copy"))))
+                        .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, TextComponent.of("Только ник", TextColor.GRAY)
+                            .append(TextComponent.newline()).append(TextComponent.of("Нажми, чтобы скопировать"))))
                         .clickEvent(ClickEvent.of(ClickEvent.Action.COPY_TO_CLIPBOARD, name));
             } else {
                 return TextComponent.of(name, TextColor.YELLOW)
-                        .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, TextComponent.of("Last known name of uuid: ", TextColor.GRAY)
+                        .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, TextComponent.of("Последний известный uuid: ", TextColor.GRAY)
                             .append(TextComponent.of(uuid.toString(), TextColor.WHITE))
-                            .append(TextComponent.newline()).append(TextComponent.of("Click to copy"))))
+                            .append(TextComponent.newline()).append(TextComponent.of("Нажми, чтобы скопировать"))))
                         .clickEvent(ClickEvent.of(ClickEvent.Action.COPY_TO_CLIPBOARD, uuid.toString()));
             }
         }).iterator();
