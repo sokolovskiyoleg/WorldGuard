@@ -364,7 +364,7 @@ public class DefaultDomain implements Domain, ChangeTracked {
         }
         if (groupDomain.size() > 0) {
             if (playerDomain.size() > 0) {
-                builder.append(TextComponent.of("; "));
+                builder.append(TextComponent.of(message("commands.region.domain.section-delimiter")));
             }
             builder.append(toGroupsComponent());
         }
@@ -374,10 +374,10 @@ public class DefaultDomain implements Domain, ChangeTracked {
     private Component toGroupsComponent() {
         final TextComponent.Builder builder = TextComponent.builder("");
         for (Iterator<String> it = groupDomain.getGroups().iterator(); it.hasNext(); ) {
-            builder.append(TextComponent.of("g:", TextColor.GRAY))
+            builder.append(TextComponent.of(message("commands.region.domain.group-prefix"), TextColor.GRAY))
                     .append(TextComponent.of(it.next(), TextColor.GOLD));
             if (it.hasNext()) {
-                builder.append(TextComponent.of(", "));
+                builder.append(TextComponent.of(message("commands.region.domain.delimiter")));
             }
         }
         return builder.build().hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, TextComponent.of(message("commands.region.domain.groups"))));
@@ -426,7 +426,7 @@ public class DefaultDomain implements Domain, ChangeTracked {
         while (profiles.hasNext()) {
             builder.append(profiles.next());
             if (profiles.hasNext() || !uuids.isEmpty()) {
-                builder.append(TextComponent.of(", "));
+                builder.append(TextComponent.of(message("commands.region.domain.delimiter")));
             }
         }
 
@@ -436,7 +436,7 @@ public class DefaultDomain implements Domain, ChangeTracked {
                         .append(TextComponent.newline())
                         .append(TextComponent.of(String.join("\n", uuids), TextColor.WHITE))
                         .append(TextComponent.newline().append(TextComponent.of(message("commands.region.domain.copy"))))))
-                    .clickEvent(ClickEvent.of(ClickEvent.Action.COPY_TO_CLIPBOARD, String.join(",", uuids))));
+                    .clickEvent(ClickEvent.of(ClickEvent.Action.COPY_TO_CLIPBOARD, String.join(message("commands.region.domain.copy-delimiter"), uuids))));
         }
 
 

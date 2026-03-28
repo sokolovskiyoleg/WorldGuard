@@ -21,15 +21,16 @@ package com.sk89q.worldguard.util.formatting.component;
 
 import com.sk89q.worldedit.util.formatting.text.Component;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
+import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.blacklist.event.BlacklistEvent;
 
 public class BlacklistNotify extends Notify {
 
     public BlacklistNotify(BlacklistEvent event, String comment) {
-        super(event.getCauseName(), " (" + event.getDescription() + ") ");
+        super(event.getCauseName(), WorldGuard.getInstance().getLocalization().format("blacklist.notify.description", event.getDescription()));
         Component base = event.getTarget().getFriendlyNameComponent();
         if (comment != null) {
-            base = base.append(TextComponent.of(" (" + comment + ")"));
+            base = base.append(TextComponent.of(WorldGuard.getInstance().getLocalization().format("blacklist.notify.comment", comment)));
         }
         append(base);
     }
