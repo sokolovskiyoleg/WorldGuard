@@ -80,10 +80,10 @@ public class WorldGuardCommands {
     @Command(aliases = {"version"}, desc = "Версия WorldGuard", max = 0)
     public void version(CommandContext args, Actor sender) throws CommandException {
         sender.print(message("commands.version.info.version", WorldGuard.getVersion()));
-        sender.print("http://www.enginehub.org");
+        sender.print(message("commands.version.info.website"));
 
         sender.printDebug(message("commands.version.debug.header"));
-        sender.printDebug(String.format("* %s (%s)", worldGuard.getPlatform().getPlatformName(), worldGuard.getPlatform().getPlatformVersion()));
+        sender.printDebug(message("commands.version.debug.platform", worldGuard.getPlatform().getPlatformName(), worldGuard.getPlatform().getPlatformVersion()));
     }
 
     @Command(aliases = {"reload"}, desc = "Перезагрузить конфигурацию WorldGuard", max = 0)

@@ -183,7 +183,7 @@ public final class WorldGuard {
         if (sender instanceof LocalPlayer) {
             return (LocalPlayer) sender;
         } else {
-            throw new CommandException("Ожидается игрок.");
+            throw new CommandException(getLocalization().get("errors.expected-player"));
         }
     }
 

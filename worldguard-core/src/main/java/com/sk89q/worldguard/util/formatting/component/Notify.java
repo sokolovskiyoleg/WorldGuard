@@ -22,11 +22,12 @@ package com.sk89q.worldguard.util.formatting.component;
 import com.sk89q.worldedit.util.formatting.component.TextComponentProducer;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.format.TextColor;
+import com.sk89q.worldguard.WorldGuard;
 
 public class Notify extends TextComponentProducer {
 
     public Notify(String cause, String description) {
-        append(TextComponent.of("WG: ", TextColor.GRAY));
+        append(TextComponent.of(WorldGuard.getInstance().getLocalization().get("notify.prefix"), TextColor.GRAY));
         append(TextComponent.of(cause, TextColor.LIGHT_PURPLE));
         append(TextComponent.of(description, TextColor.GOLD));
     }

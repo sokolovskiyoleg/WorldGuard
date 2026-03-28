@@ -25,7 +25,6 @@ import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.worldguard.util.profile.Profile;
 import com.sk89q.worldedit.extension.platform.Actor;
 import com.sk89q.worldedit.util.Location;
-import com.sk89q.worldedit.util.formatting.component.PaginationBox;
 import com.sk89q.worldedit.util.formatting.text.Component;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.event.ClickEvent;
@@ -39,6 +38,7 @@ import com.sk89q.worldguard.protection.association.RegionAssociable;
 import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import com.sk89q.worldguard.util.formatting.component.LocalizedPaginationBox;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -201,7 +201,7 @@ public class RegionLister implements Callable<Integer> {
                 + (filterByIntersecting != null ? " -s" : "")
                 + (idFilter != null ? " -i " + idFilter : "")
                 + " %page%";
-        PaginationBox box = new RegionListBox(title, cmd, perms, entries, world);
+        LocalizedPaginationBox box = new RegionListBox(title, cmd, perms, entries, world);
         sender.print(box.create(page));
 
         return page;
@@ -256,7 +256,7 @@ public class RegionLister implements Callable<Integer> {
         }
     }
 
-    private static class RegionListBox extends PaginationBox {
+    private static class RegionListBox extends LocalizedPaginationBox {
         private final RegionPermissionModel perms;
         private final List<RegionListEntry> entries;
         private String world;

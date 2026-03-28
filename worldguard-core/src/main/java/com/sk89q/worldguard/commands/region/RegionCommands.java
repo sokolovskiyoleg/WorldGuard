@@ -641,9 +641,9 @@ public final class RegionCommands extends RegionCommandsBase {
             sendFlagHelper(sender, world, existing, permModel, page);
         } else {
             RegionPrintoutBuilder printout = new RegionPrintoutBuilder(world.getName(), existing, null, sender);
-            printout.append(SubtleFormat.wrap("(Текущие флаги: "));
+            printout.append(SubtleFormat.wrap(message("commands.region.flag.current.open")));
             printout.appendFlagsList(false);
-            printout.append(SubtleFormat.wrap(")"));
+            printout.append(SubtleFormat.wrap(message("commands.region.flag.current.close")));
             printout.send(sender);
             checkSpawnOverlap(sender, world, existing);
         }
@@ -771,25 +771,24 @@ public final class RegionCommands extends RegionCommandsBase {
             // Tell the user what's wrong
             RegionPrintoutBuilder printout = new RegionPrintoutBuilder(world.getName(), parent, null, sender);
             assert parent != null;
-            printout.append(ErrorFormat.wrap("Регион '", parent.getId(), "' уже является родительским регионом региона '", child.getId(),
-                    "', это призведет к зацикливанию.")).newline();
-            printout.append(SubtleFormat.wrap("(Текущее родительские регионы '", parent.getId(), "':")).newline();
+            printout.append(ErrorFormat.wrap(message("commands.region.parent.circular", parent.getId(), child.getId()))).newline();
+            printout.append(SubtleFormat.wrap(message("commands.region.parent.current-tree", parent.getId()))).newline();
             printout.appendParentTree(true);
-            printout.append(SubtleFormat.wrap(")"));
+            printout.append(SubtleFormat.wrap(message("commands.region.parent.tree-close")));
             printout.send(sender);
             return;
         }
 
         // Tell the user the current inheritance
         RegionPrintoutBuilder printout = new RegionPrintoutBuilder(world.getName(), child, null, sender);
-        printout.append(TextComponent.of("Родительский регион для '" + child.getId() + "' выставлен.", TextColor.LIGHT_PURPLE));
+        printout.append(TextComponent.of(message("commands.region.parent.success", child.getId()), TextColor.LIGHT_PURPLE));
         if (parent != null) {
             printout.newline();
-            printout.append(SubtleFormat.wrap("(Родительские регионы:")).newline();
+            printout.append(SubtleFormat.wrap(message("commands.region.parent.tree-open"))).newline();
             printout.appendParentTree(true);
-            printout.append(SubtleFormat.wrap(")"));
+            printout.append(SubtleFormat.wrap(message("commands.region.parent.tree-close")));
         } else {
-            printout.append(LabelFormat.wrap(" Регион теперь осиротевший."));
+            printout.append(LabelFormat.wrap(message("commands.region.parent.orphaned")));
         }
         printout.send(sender);
     }
@@ -832,7 +831,7 @@ public final class RegionCommands extends RegionCommandsBase {
             task.setRemovalStrategy(RemovalStrategy.UNSET_PARENT_IN_CHILDREN);
         }
 
-        final String description = String.format("Удаление региона '%s' из '%s'", existing.getId(), world.getName());
+        final String description = message("commands.region.remove.supervisor", existing.getId(), world.getName());
         AsyncCommandBuilder.wrap(task, sender)
                 .registerWithSupervisor(WorldGuard.getInstance().getSupervisor(), description)
                 .sendMessageAfterDelay(message("commands.region.remove.waiting"))
@@ -876,7 +875,7 @@ public final class RegionCommands extends RegionCommandsBase {
                 throw new CommandException(message("commands.region.load.error.no-manager", world.getName()));
             }
 
-            final String description = String.format("Загрузка области данных для мира '%s'.", world.getName());
+            final String description = message("commands.region.load.supervisor.one", world.getName());
             AsyncCommandBuilder.wrap(new RegionManagerLoader(manager), sender)
                     .registerWithSupervisor(worldGuard.getSupervisor(), description)
                     .sendMessageAfterDelay(message("commands.region.common.waiting-inline", description))
@@ -936,7 +935,7 @@ public final class RegionCommands extends RegionCommandsBase {
                 throw new CommandException(message("commands.region.save.error.no-manager", world.getName()));
             }
 
-            final String description = String.format("Сохранение регионов для мира '%s'.", world.getName());
+            final String description = message("commands.region.save.supervisor.one", world.getName());
             AsyncCommandBuilder.wrap(new RegionManagerSaver(manager), sender)
                     .registerWithSupervisor(worldGuard.getSupervisor(), description)
                     .sendMessageAfterDelay(message("commands.region.common.waiting-inline", description))
