@@ -185,16 +185,16 @@ public class RegionProtectionListener extends AbstractListener {
                 if (fire) flags.add(Flags.FIRE_SPREAD);
                 if (lava) flags.add(Flags.LAVA_FIRE);
                 canPlace = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, flags.toArray(new StateFlag[flags.size()])));
-                what = "размещать огонь";
+                what = message("listeners.region.action.place-fire");
 
             } else if (type == Material.FROSTED_ICE) {
                 event.setSilent(true); // gets spammy
                 canPlace = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.BLOCK_PLACE, Flags.FROSTED_ICE_FORM));
-                what = "использовать ледяные ходунки"; // hidden anyway
+                what = message("listeners.region.action.use-frost-walker"); // hidden anyway
             /* Everything else */
             } else {
                 canPlace = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.BLOCK_PLACE));
-                what = "размещать этот блок";
+                what = message("listeners.region.action.place-block");
             }
 
             if (!canPlace) {
@@ -224,12 +224,12 @@ public class RegionProtectionListener extends AbstractListener {
                 /* TNT */
                 if (event.getCause().find(EntityType.TNT, EntityType.TNT_MINECART) != null) {
                     canBreak = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.BLOCK_BREAK, Flags.TNT));
-                    what = "использовать динамит";
+                    what = message("listeners.region.action.use-tnt");
 
                 /* Everything else */
                 } else {
                     canBreak = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.BLOCK_BREAK));
-                    what = "ломать этот блок";
+                    what = message("listeners.region.action.break-block");
                 }
 
                 if (!canBreak) {
@@ -259,47 +259,47 @@ public class RegionProtectionListener extends AbstractListener {
             /* Saplings, etc. */
             if (Materials.isConsideredBuildingIfUsed(type)) {
                 canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event));
-                what = "использовать это";
+                what = message("listeners.region.action.use-this");
 
             /* Inventory */
             } else if (Materials.isInventoryBlock(type)) {
                 canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.CHEST_ACCESS));
-                what = "открывать это";
+                what = message("listeners.region.action.open-this");
 
             /* Inventory for blocks with the possibility to be only use, e.g. lectern */
             } else if (handleAsInventoryUsage(event.getOriginalEvent())) {
                 canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.CHEST_ACCESS));
-                what = "брать это";
+                what = message("listeners.region.action.take-this");
 
             /* Anvils */
             } else if (Materials.isAnvil(type)) {
                 canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.USE_ANVIL));
-                what = "использовать это";
+                what = message("listeners.region.action.use-this");
 
             /* Beds */
             } else if (Materials.isBed(type)) {
                 canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.INTERACT, Flags.SLEEP));
-                what = "спать";
+                what = message("listeners.region.action.sleep");
 
             /* Respawn Anchors */
             } else if(type == Material.RESPAWN_ANCHOR) {
                 canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.INTERACT, Flags.RESPAWN_ANCHORS));
-                what = "использовать якоря";
+                what = message("listeners.region.action.use-anchors");
 
             /* TNT */
             } else if (type == Material.TNT) {
                 canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.INTERACT, Flags.TNT));
-                what = "использовать взрывчатку";
+                what = message("listeners.region.action.use-explosives");
 
             /* Legacy USE flag */
             } else if (Materials.isUseFlagApplicable(type)) {
                 canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.INTERACT, Flags.USE));
-                what = "использовать это";
+                what = message("listeners.region.action.use-this");
 
             /* Everything else */
             } else {
                 canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.INTERACT));
-                what = "использовать это";
+                what = message("listeners.region.action.use-this");
             }
 
             if (!canUse) {
@@ -329,26 +329,26 @@ public class RegionProtectionListener extends AbstractListener {
         /* Vehicles */
         if (Entities.isVehicle(type)) {
             canSpawn = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.PLACE_VEHICLE));
-            what = "размещать транспорт";
+            what = message("listeners.region.action.place-vehicle");
 
         /* Item pickup */
         } else if (event.getEntity() instanceof Item) {
             canSpawn = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.ITEM_DROP));
-            what = "выбрасывать предметы";
+            what = message("listeners.region.action.drop-items");
 
         /* XP drops */
         } else if (type == EntityType.EXPERIENCE_ORB) {
             canSpawn = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.EXP_DROPS));
-            what = "выбрасывать опыт";
+            what = message("listeners.region.action.drop-experience");
 
         } else if (Entities.isAoECloud(type)) {
             canSpawn = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.POTION_SPLASH));
-            what = "использовать зелья";
+            what = message("listeners.region.action.use-potions");
 
         /* Everything else */
         } else {
             canSpawn = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event));
-            what = "размещать что-то";
+            what = message("listeners.region.action.place-something");
         }
 
         if (!canSpawn) {
@@ -374,17 +374,17 @@ public class RegionProtectionListener extends AbstractListener {
         /* Vehicles */
         if (Entities.isVehicle(type)) {
             canDestroy = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.DESTROY_VEHICLE));
-            what = "ломать транспорт";
+            what = message("listeners.region.action.break-vehicle");
 
         /* Item pickup */
         } else if (event.getEntity() instanceof Item || event.getEntity() instanceof ExperienceOrb) {
             canDestroy = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.ITEM_PICKUP));
-            what = "поднимать предметы";
+            what = message("listeners.region.action.pick-up-items");
 
         /* Everything else */
         } else {
             canDestroy = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event));
-            what = "ломать что-то";
+            what = message("listeners.region.action.break-something");
         }
 
         if (!canDestroy) {
@@ -412,7 +412,7 @@ public class RegionProtectionListener extends AbstractListener {
         if (Entities.isHostile(entity) || Entities.isAmbient(entity)
                 || Entities.isNPC(entity) || entity instanceof Player) {
             canUse = event.getRelevantFlags().isEmpty() || query.queryState(BukkitAdapter.adapt(target), associable, combine(event)) != State.DENY;
-            what = "использовать это";
+            what = message("listeners.region.action.use-this");
         /* Paintings, item frames, etc. */
         } else if (Entities.isConsideredBuildingIfUsed(entity)
                 // weird case since sneak+interact is chest access and not ride
@@ -421,29 +421,29 @@ public class RegionProtectionListener extends AbstractListener {
                     && event.getCause().getFirstPlayer() != null
                     && ((ItemFrame) entity).getItem().getType() != Material.AIR) {
                 canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.ITEM_FRAME_ROTATE));
-                what = "изменять это";
+                what = message("listeners.region.action.modify-this");
             } else if (event.getOriginalEvent() instanceof InventoryOpenEvent || event.getOriginalEvent() instanceof InventoryMoveItemEvent) {
                 canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.CHEST_ACCESS));
-                what = "открывать это";
+                what = message("listeners.region.action.open-this");
             } else {
                 canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event));
-                what = "изменять это";
+                what = message("listeners.region.action.modify-this");
             }
         /* Ridden on use */
         } else if (Entities.isRiddenOnUse(entity)) {
             if (event.getOriginalEvent() instanceof PlayerLeashEntityEvent) {
                 canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event));
-                what = "использовать это";
+                what = message("listeners.region.action.use-this");
             } else {
                 // this is bypassed here as it's handled by the entity mount listener below
                 // bukkit actually gives three events in this case - in order: PlayerInteractAtEntity, VehicleEnter, EntityMount
                 canUse = true;
-                what = "кататься здесь";
+                what = message("listeners.region.action.ride-here");
             }
         /* Everything else */
         } else {
             canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.INTERACT));
-            what = "использовать это";
+            what = message("listeners.region.action.use-this");
         }
 
         if (!canUse) {
@@ -477,14 +477,14 @@ public class RegionProtectionListener extends AbstractListener {
         /* Hostile / ambient mob override */
         if (Entities.isHostile(event.getEntity()) || Entities.isAmbient(event.getEntity())) {
             canDamage = event.getRelevantFlags().isEmpty() || query.queryState(target, associable, combine(event)) != State.DENY;
-            what = "ударять это";
+            what = message("listeners.region.action.hit-this");
         } else if (Entities.isVehicle(event.getEntity().getType())) {
             canDamage = query.testBuild(target, associable, combine(event, Flags.DESTROY_VEHICLE));
-            what = "изменять это";
+            what = message("listeners.region.action.modify-this");
         /* Paintings, item frames, etc. */
         } else if (Entities.isConsideredBuildingIfUsed(event.getEntity())) {
             canDamage = query.testBuild(target, associable, combine(event));
-            what = "изменять это";
+            what = message("listeners.region.action.modify-this");
 
         /* PVP */
         } else if (pvp) {
@@ -505,22 +505,22 @@ public class RegionProtectionListener extends AbstractListener {
                 canDamage = true;
             }
 
-            what = "драться";
+            what = message("listeners.region.action.fight");
 
         /* Player damage not caused  by another player */
         } else if (event.getEntity() instanceof Player) {
             canDamage = event.getRelevantFlags().isEmpty() || query.queryState(target, associable, combine(event)) != State.DENY;
-            what = "ударять это";
+            what = message("listeners.region.action.hit-this");
 
         /* damage to non-hostile mobs (e.g. animals) */
         } else if (Entities.isNonHostile(event.getEntity())) {
             canDamage = query.testBuild(target, associable, combine(event, Flags.DAMAGE_ANIMALS));
-            what = "наносить урон";
+            what = message("listeners.region.action.deal-damage");
 
         /* Everything else */
         } else {
             canDamage = query.testBuild(target, associable, combine(event, Flags.INTERACT));
-            what = "ударять это";
+            what = message("listeners.region.action.hit-this");
         }
 
         if (!canDamage) {
@@ -546,7 +546,7 @@ public class RegionProtectionListener extends AbstractListener {
         if (!query.testBuild(BukkitAdapter.adapt(location), localPlayer, Flags.RIDE, Flags.INTERACT)) {
             event.setCancelled(true);
             DelegateEvent dummy = new UseEntityEvent(event, cause, vehicle);
-            tellErrorMessage(dummy, cause, vehicle.getLocation(), "ride that");
+            tellErrorMessage(dummy, cause, vehicle.getLocation(), message("listeners.region.action.ride-that"));
         }
     }
 
@@ -565,7 +565,7 @@ public class RegionProtectionListener extends AbstractListener {
                     long now = System.currentTimeMillis();
                     Long lastTime = WGMetadata.getIfPresent(player, DISEMBARK_MESSAGE_KEY, Long.class);
                     if (lastTime == null || now - lastTime >= LAST_MESSAGE_DELAY) {
-                        player.sendMessage("" + ChatColor.GOLD + "Не высаживайтесь здесь!" + ChatColor.GRAY + " Вы не сможете вернуться обратно.");
+                        player.sendMessage(colorMessage("listeners.region.disembark.message"));
                         WGMetadata.put(player, DISEMBARK_MESSAGE_KEY, now);
                     }
 
@@ -591,6 +591,14 @@ public class RegionProtectionListener extends AbstractListener {
             flags[flag.length + i] = extra.get(i);
         }
         return flags;
+    }
+
+    private String message(String key, Object... arguments) {
+        return WorldGuard.getInstance().getLocalization().format(key, arguments);
+    }
+
+    private String colorMessage(String key, Object... arguments) {
+        return ChatColor.translateAlternateColorCodes('&', message(key, arguments));
     }
 
     /**

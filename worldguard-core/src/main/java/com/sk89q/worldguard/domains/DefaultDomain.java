@@ -30,6 +30,7 @@ import com.sk89q.worldedit.util.formatting.text.event.ClickEvent;
 import com.sk89q.worldedit.util.formatting.text.event.HoverEvent;
 import com.sk89q.worldedit.util.formatting.text.format.TextColor;
 import com.sk89q.worldguard.LocalPlayer;
+import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.util.ChangeTracked;
 
 import javax.annotation.Nullable;
@@ -363,7 +364,7 @@ public class DefaultDomain implements Domain, ChangeTracked {
         }
         if (groupDomain.size() > 0) {
             if (playerDomain.size() > 0) {
-                builder.append(TextComponent.of("; "));
+                builder.append(TextComponent.of(message("commands.region.domain.section-delimiter")));
             }
             builder.append(toGroupsComponent());
         }
@@ -373,13 +374,13 @@ public class DefaultDomain implements Domain, ChangeTracked {
     private Component toGroupsComponent() {
         final TextComponent.Builder builder = TextComponent.builder("");
         for (Iterator<String> it = groupDomain.getGroups().iterator(); it.hasNext(); ) {
-            builder.append(TextComponent.of("g:", TextColor.GRAY))
+            builder.append(TextComponent.of(message("commands.region.domain.group-prefix"), TextColor.GRAY))
                     .append(TextComponent.of(it.next(), TextColor.GOLD));
             if (it.hasNext()) {
-                builder.append(TextComponent.of(", "));
+                builder.append(TextComponent.of(message("commands.region.domain.delimiter")));
             }
         }
-        return builder.build().hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, TextComponent.of("Группы")));
+        return builder.build().hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, TextComponent.of(message("commands.region.domain.groups"))));
     }
 
     private Component toPlayersComponent(ProfileCache cache) {
@@ -411,35 +412,39 @@ public class DefaultDomain implements Domain, ChangeTracked {
             final UUID uuid = profileMap.get(name);
             if (uuid == null) {
                 return TextComponent.of(name, TextColor.YELLOW)
-                        .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, TextComponent.of("Только ник", TextColor.GRAY)
-                            .append(TextComponent.newline()).append(TextComponent.of("Нажми, чтобы скопировать"))))
+                        .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, TextComponent.of(message("commands.region.domain.name-only"), TextColor.GRAY)
+                            .append(TextComponent.newline()).append(TextComponent.of(message("commands.region.domain.copy")))))
                         .clickEvent(ClickEvent.of(ClickEvent.Action.COPY_TO_CLIPBOARD, name));
             } else {
                 return TextComponent.of(name, TextColor.YELLOW)
-                        .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, TextComponent.of("Последний известный uuid:", TextColor.GRAY)
+                        .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, TextComponent.of(message("commands.region.domain.last-uuid"), TextColor.GRAY)
                             .append(TextComponent.of(uuid.toString(), TextColor.WHITE))
-                            .append(TextComponent.newline()).append(TextComponent.of("Нажми, чтобы скопировать"))))
+                            .append(TextComponent.newline()).append(TextComponent.of(message("commands.region.domain.copy")))))
                         .clickEvent(ClickEvent.of(ClickEvent.Action.COPY_TO_CLIPBOARD, uuid.toString()));
             }
         }).iterator();
         while (profiles.hasNext()) {
             builder.append(profiles.next());
             if (profiles.hasNext() || !uuids.isEmpty()) {
-                builder.append(TextComponent.of(", "));
+                builder.append(TextComponent.of(message("commands.region.domain.delimiter")));
             }
         }
 
         if (!uuids.isEmpty()) {
-            builder.append(TextComponent.of(uuids.size() + " неизвестное UUID" + (uuids.size() == 1 ? "" : "s"), TextColor.GRAY)
-                    .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, TextComponent.of("Невозможно разрешить имя для:", TextColor.GRAY)
+            builder.append(TextComponent.of(message("commands.region.domain.unknown-uuids", uuids.size()), TextColor.GRAY)
+                    .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, TextComponent.of(message("commands.region.domain.unresolved"), TextColor.GRAY)
                         .append(TextComponent.newline())
                         .append(TextComponent.of(String.join("\n", uuids), TextColor.WHITE))
-                        .append(TextComponent.newline().append(TextComponent.of("Нажмите, чтобы скопировать")))))
-                    .clickEvent(ClickEvent.of(ClickEvent.Action.COPY_TO_CLIPBOARD, String.join(",", uuids))));
+                        .append(TextComponent.newline().append(TextComponent.of(message("commands.region.domain.copy"))))))
+                    .clickEvent(ClickEvent.of(ClickEvent.Action.COPY_TO_CLIPBOARD, String.join(message("commands.region.domain.copy-delimiter"), uuids))));
         }
 
 
         return builder.build();
+    }
+
+    private static String message(String key, Object... arguments) {
+        return WorldGuard.getInstance().getLocalization().format(key, arguments);
     }
 
     @Override

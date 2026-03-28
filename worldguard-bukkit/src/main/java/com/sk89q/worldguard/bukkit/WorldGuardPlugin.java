@@ -33,6 +33,8 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.bukkit.BukkitCommandSender;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.extension.platform.Actor;
+import com.sk89q.worldedit.internal.util.LogManagerCompat;
+import com.sk89q.worldedit.util.concurrency.LazyReference;
 import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.blacklist.Blacklist;
@@ -74,6 +76,8 @@ import com.sk89q.worldguard.protection.managers.storage.file.DirectoryYamlDriver
 import com.sk89q.worldguard.protection.managers.storage.sql.SQLDriver;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.util.logging.RecordMessagePrefixer;
+import io.papermc.lib.PaperLib;
+import io.papermc.paper.ServerBuildInfo;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.DrilldownPie;
 import org.bstats.charts.SimplePie;
@@ -103,6 +107,7 @@ import java.util.logging.Logger;
  */
 public class WorldGuardPlugin extends JavaPlugin {
 
+    private static final org.apache.logging.log4j.Logger LOGGER = LogManagerCompat.getLogger();
     private static WorldGuardPlugin inst;
     private static BukkitWorldGuardPlatform platform;
     private final CommandsManager<Actor> commands;
@@ -163,7 +168,11 @@ public class WorldGuardPlugin extends JavaPlugin {
             reg.register(GeneralCommands.class);
         }
 
-        getServer().getScheduler().scheduleSyncRepeatingTask(this, sessionManager, BukkitSessionManager.RUN_DELAY, BukkitSessionManager.RUN_DELAY);
+        if (this.isFolia()) {
+            getServer().getGlobalRegionScheduler().runAtFixedRate(this, scheduledTask -> sessionManager.run(), BukkitSessionManager.RUN_DELAY, BukkitSessionManager.RUN_DELAY);
+        } else {
+            getServer().getScheduler().scheduleSyncRepeatingTask(this, sessionManager, BukkitSessionManager.RUN_DELAY, BukkitSessionManager.RUN_DELAY);
+        }
 
         // Register events
         getServer().getPluginManager().registerEvents(sessionManager, this);
@@ -204,12 +213,21 @@ public class WorldGuardPlugin extends JavaPlugin {
         }
         worldListener.registerEvents();
 
-        Bukkit.getScheduler().runTask(this, () -> {
+        if (this.isFolia()) {
             for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-                ProcessPlayerEvent event = new ProcessPlayerEvent(player);
-                Events.fire(event);
+                player.getScheduler().run(this, scheduledTask -> {
+                    ProcessPlayerEvent event = new ProcessPlayerEvent(player);
+                    Events.fire(event);
+                }, null);
             }
-        });
+        } else {
+            Bukkit.getScheduler().runTask(this, () -> {
+                for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+                    ProcessPlayerEvent event = new ProcessPlayerEvent(player);
+                    Events.fire(event);
+                }
+            });
+        }
 
         ((SimpleFlagRegistry) WorldGuard.getInstance().getFlagRegistry()).setInitialized(true);
 
@@ -264,7 +282,12 @@ public class WorldGuardPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         WorldGuard.getInstance().disable();
-        this.getServer().getScheduler().cancelTasks(this);
+        if (this.isFolia()) {
+            this.getServer().getGlobalRegionScheduler().cancelTasks(this);
+            this.getServer().getAsyncScheduler().cancelTasks(this);
+        } else {
+            this.getServer().getScheduler().cancelTasks(this);
+        }
     }
 
     @Override
@@ -289,7 +312,7 @@ public class WorldGuardPlugin extends JavaPlugin {
                 throw t;
             }
         } catch (CommandPermissionsException e) {
-            sender.sendMessage(ChatColor.RED + "У вас нет разрешения.");
+            sender.sendMessage(colorMessage("commands.error.no-permission"));
         } catch (MissingNestedCommandException e) {
             sender.sendMessage(ChatColor.RED + e.getUsage());
         } catch (CommandUsageException e) {
@@ -386,15 +409,15 @@ public class WorldGuardPlugin extends JavaPlugin {
     public WorldEditPlugin getWorldEdit() throws CommandException {
         Plugin worldEdit = getServer().getPluginManager().getPlugin("WorldEdit");
         if (worldEdit == null) {
-            throw new CommandException("WorldEdit, кажется, не установлен.");
+            throw new CommandException(message("worldedit.error.not-installed"));
         } else if (!worldEdit.isEnabled()) {
-            throw new CommandException("WorldEdit, кажется, не включен.");
+            throw new CommandException(message("worldedit.error.not-enabled"));
         }
 
         if (worldEdit instanceof WorldEditPlugin) {
             return (WorldEditPlugin) worldEdit;
         } else {
-            throw new CommandException("WorldEdit detection failed (report error).");
+            throw new CommandException(message("worldedit.error.detection-failed"));
         }
     }
 
@@ -439,7 +462,7 @@ public class WorldGuardPlugin extends JavaPlugin {
         } else if (sender instanceof BukkitCommandSender) {
             return Bukkit.getConsoleSender(); // TODO Fix
         } else {
-            throw new IllegalArgumentException("Неизвестный тип актера. Пожалуйста, сообщите об ошибке");
+            throw new IllegalArgumentException(message("errors.actor.unknown-type"));
         }
     }
 
@@ -478,6 +501,14 @@ public class WorldGuardPlugin extends JavaPlugin {
      */
     private void configureLogger() {
         RecordMessagePrefixer.register(Logger.getLogger("com.sk89q.worldguard"), "[WorldGuard] ");
+    }
+
+    private String message(String key) {
+        return WorldGuard.getInstance().getLocalization().get(key);
+    }
+
+    private String colorMessage(String key) {
+        return ChatColor.translateAlternateColorCodes('&', message(key));
     }
 
     /**
@@ -522,6 +553,23 @@ public class WorldGuardPlugin extends JavaPlugin {
 
     public PlayerMoveListener getPlayerMoveListener() {
         return playerMoveListener;
+    }
+    private final LazyReference<Boolean> folia = LazyReference.from(() -> {
+        try {
+            // Folia is Paper-based, so this is a good first check.
+            if (PaperLib.isPaper()) {
+                return ServerBuildInfo.buildInfo().isBrandCompatible(net.kyori.adventure.key.Key.key("papermc", "folia"));
+            }
+        } catch (Throwable t) {
+            // Ignore, this likely means an outdated version.
+            LOGGER.warn("Failed to check if server is running Folia", t);
+        }
+
+        return false;
+    });
+
+    public boolean isFolia() {
+        return folia.getValue();
     }
 
 }

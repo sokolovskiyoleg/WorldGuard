@@ -38,6 +38,7 @@ import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import com.sk89q.worldguard.protection.flags.registry.SimpleFlagRegistry;
 import com.sk89q.worldguard.util.WorldGuardExceptionConverter;
 import com.sk89q.worldguard.util.concurrent.EvenMoreExecutors;
+import com.sk89q.worldguard.util.localization.Localization;
 
 import java.io.File;
 import java.io.IOException;
@@ -60,6 +61,7 @@ public final class WorldGuard {
     private ProfileService profileService;
     private ListeningExecutorService executorService;
     private WorldGuardExceptionConverter exceptionConverter = new WorldGuardExceptionConverter();
+    private Localization localization = Localization.empty();
 
     static {
         Flags.registerAll();
@@ -162,6 +164,14 @@ public final class WorldGuard {
         return exceptionConverter;
     }
 
+    public Localization getLocalization() {
+        return localization;
+    }
+
+    public void setLocalization(Localization localization) {
+        this.localization = checkNotNull(localization, "localization");
+    }
+
     /**
      * Checks to see if the sender is a player, otherwise throw an exception.
      *
@@ -173,7 +183,7 @@ public final class WorldGuard {
         if (sender instanceof LocalPlayer) {
             return (LocalPlayer) sender;
         } else {
-            throw new CommandException("Ожидается игрок.");
+            throw new CommandException(getLocalization().get("errors.expected-player"));
         }
     }
 

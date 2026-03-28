@@ -70,10 +70,14 @@ public class WorldGuardCommandBookListener implements Listener {
                 }
                 
                 if (regions.size() > 0) {
-                    event.addWhoisInformation("Текущие регионы", regionStr);
+                    event.addWhoisInformation(message("listeners.commandbook.current-regions"), regionStr);
                 }
-                event.addWhoisInformation("Можно строить", regions.testState(localPlayer, Flags.BUILD));
+                event.addWhoisInformation(message("listeners.commandbook.can-build"), regions.testState(localPlayer, Flags.BUILD));
             }
         }
+    }
+
+    private String message(String key, Object... arguments) {
+        return WorldGuard.getInstance().getLocalization().format(key, arguments);
     }
 }

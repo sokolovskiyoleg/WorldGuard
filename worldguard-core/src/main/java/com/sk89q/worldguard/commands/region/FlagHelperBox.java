@@ -25,7 +25,6 @@ import com.google.common.collect.Iterators;
 import com.sk89q.worldedit.registry.Keyed;
 import com.sk89q.worldedit.registry.Registry;
 import com.sk89q.worldedit.util.Location;
-import com.sk89q.worldedit.util.formatting.component.PaginationBox;
 import com.sk89q.worldedit.util.formatting.text.Component;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
@@ -48,6 +47,8 @@ import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.flags.StringFlag;
 import com.sk89q.worldguard.protection.flags.registry.UnknownFlag;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import com.sk89q.worldguard.util.formatting.component.LocalizedComponents;
+import com.sk89q.worldguard.util.formatting.component.LocalizedPaginationBox;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -61,7 +62,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-class FlagHelperBox extends PaginationBox {
+class FlagHelperBox extends LocalizedPaginationBox {
 
     private static final List<Flag<?>> FLAGS = WorldGuard.getInstance().getFlagRegistry().getAll().stream()
             .sorted((f1, f2) -> {
@@ -84,7 +85,7 @@ class FlagHelperBox extends PaginationBox {
     private boolean monoSpace;
 
     FlagHelperBox(World world, ProtectedRegion region, RegionPermissionModel perms) {
-        super("Флаги региона " + region.getId(), "/rg flags -w \"" + world.getName() + "\" -p %page% " + region.getId());
+        super(message("commands.region.flags.title", region.getId()), "/rg flags -w \"" + world.getName() + "\" -p %page% " + region.getId());
         this.world = world;
         this.region = region;
         this.perms = perms;
@@ -93,7 +94,7 @@ class FlagHelperBox extends PaginationBox {
     @Override
     public Component getComponent(int number) {
         if (number == Flags.INBUILT_FLAGS.size()) {
-            return centerAndBorder(TextComponent.of("Сторонние флаги", TextColor.AQUA));
+            return centerAndBorder(TextComponent.of(message("commands.region.flags.third-party"), TextColor.AQUA));
         } else if (number > Flags.INBUILT_FLAGS.size()) {
             number -= 1;
         }
@@ -121,13 +122,13 @@ class FlagHelperBox extends PaginationBox {
         if (flag.usesMembershipAsDefault()) {
             builder.append(TextComponent.empty().append(TextComponent.of("*", TextColor.AQUA))
                     .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT,
-                            TextComponent.of("Это специальный флаг, который по умолчанию разрешает для участников и запрещает для не участников"))));
+                            TextComponent.of(message("commands.region.flags.meta.membership-default")))));
             length += monoSpace ? 1 : FlagFontInfo.getPxLength('*');
         }
         if (flag == Flags.PASSTHROUGH) {
             builder.append(TextComponent.empty().append(TextComponent.of("*", TextColor.AQUA))
                     .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT,
-                            TextComponent.of("Это специальный флаг, который переопределяет проверки сборки. (Не связанное с движением!)"))));
+                            TextComponent.of(message("commands.region.flags.meta.passthrough")))));
             length += monoSpace ? 1 : FlagFontInfo.getPxLength('*');
         }
         int leftover = (monoSpace ? PAD_PX_SIZE / 3 : PAD_PX_SIZE) - length;
@@ -199,15 +200,15 @@ class FlagHelperBox extends PaginationBox {
             List<Component> hoverTexts = new ArrayList<>();
             if (maySet) {
                 if (isExplicitSet) {
-                    hoverTexts.add(TextComponent.of("Нажмите, чтобы сбросить", TextColor.GOLD));
+                    hoverTexts.add(TextComponent.of(message("commands.region.flags.hover.reset"), TextColor.GOLD));
                 } else if (DANGER_ZONE.contains(flag) && !(ProtectedRegion.GLOBAL_REGION.equals(region.getId()) && flag == Flags.PASSTHROUGH)) {
-                    hoverTexts.add(TextComponent.of("Установка этого флага может иметь непредсказуемые последствия.", TextColor.RED)
+                    hoverTexts.add(TextComponent.of(message("commands.region.flags.hover.danger.title"), TextColor.RED)
                             .append(TextComponent.newline())
-                            .append(TextComponent.of("Пожалуйста, прочитайте документацию и установить этот флаг вручную, если вы действительно намерены это сделать.")
+                            .append(TextComponent.of(message("commands.region.flags.hover.danger.body"))
                             .append(TextComponent.newline())
-                            .append(TextComponent.of("(Совет: Вам не нужно устанавливать это для защиты региона!)"))));
+                            .append(TextComponent.of(message("commands.region.flags.hover.danger.tip")))));
                 } else {
-                    hoverTexts.add(TextComponent.of("Нажмите, чтобы установить", TextColor.GOLD));
+                    hoverTexts.add(TextComponent.of(message("commands.region.flags.hover.set"), TextColor.GOLD));
                 }
             }
             Component valType = getToolTipHint(defVal, choice, inherited);
@@ -238,7 +239,7 @@ class FlagHelperBox extends PaginationBox {
         if (suggestChoice != null && perms.maySetFlag(region, flag)) {
             builder.append(TextComponent.of(suggestChoice, TextColor.DARK_GRAY)
                     .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT,
-                            TextComponent.of("Нажмите, чтобы установить пользовательские значения", TextColor.GOLD)))
+                            TextComponent.of(message("commands.region.flags.hover.custom"), TextColor.GOLD)))
                     .clickEvent(ClickEvent.of(ClickEvent.Action.SUGGEST_COMMAND, makeCommand(flag, ""))));
         }
     }
@@ -266,9 +267,9 @@ class FlagHelperBox extends PaginationBox {
         List<Component> hoverTexts = new ArrayList<>();
         if (maySet) {
             if (isExplicitSet) {
-                hoverTexts.add(TextComponent.of("Нажмите, чтобы изменить", TextColor.GOLD));
+                hoverTexts.add(TextComponent.of(message("commands.region.flags.hover.change"), TextColor.GOLD));
             } else {
-                hoverTexts.add(TextComponent.of("Нажмите, чтобы установить", TextColor.GOLD));
+                hoverTexts.add(TextComponent.of(message("commands.region.flags.hover.set"), TextColor.GOLD));
             }
         }
         Component valType = getToolTipHint(defVal, currVal, inherited);
@@ -319,19 +320,17 @@ class FlagHelperBox extends PaginationBox {
         Component valType;
         if (inherited) {
             if (currVal == defVal) {
-                valType = TextComponent.of("Унаследованный & ")
-                        .append(TextComponent.of("default")
-                                .decoration(TextDecoration.UNDERLINED, true))
-                        .append(TextComponent.of(" value"));
+                valType = LocalizedComponents.message("commands.region.flags.tooltip.inherited-default",
+                        TextComponent.of(message("commands.region.flags.tooltip.default-word"))
+                                .decoration(TextDecoration.UNDERLINED, true));
             } else {
-                valType = TextComponent.of("наследуемое значение");
+                valType = TextComponent.of(message("commands.region.flags.tooltip.inherited"));
             }
         } else {
             if (currVal == defVal) {
-                valType = TextComponent.empty()
-                        .append(TextComponent.of("Default")
-                                .decoration(TextDecoration.UNDERLINED, true))
-                        .append(TextComponent.of(" value"));
+                valType = LocalizedComponents.message("commands.region.flags.tooltip.default",
+                        TextComponent.of(message("commands.region.flags.tooltip.default-word"))
+                                .decoration(TextDecoration.UNDERLINED, true));
             } else {
                 valType = null;
             }
@@ -365,7 +364,7 @@ class FlagHelperBox extends PaginationBox {
                 : currVal.stream().map(String::valueOf).collect(Collectors.joining(","));
         TextComponent hoverComp = TextComponent.of("");
         if (currVal != null) {
-            hoverComp = hoverComp.append(TextComponent.of("Текущие значения:"))
+            hoverComp = hoverComp.append(TextComponent.of(message("commands.region.flags.value.current-values")))
                     .append(TextComponent.newline()).append(TextComponent.of(stringValue));
         }
         appendValueText(builder, flag, display, hoverComp);
@@ -390,13 +389,13 @@ class FlagHelperBox extends PaginationBox {
         if (currVal == null) {
             final Location defVal = flag.getDefault();
             if (defVal == null) {
-                appendValueText(builder, flag, "unset location", null);
+                appendValueText(builder, flag, message("commands.region.flags.value.unset-location"), null);
             } else {
-                appendValueText(builder, flag, defVal.toString(), TextComponent.of("Значение по умолчанию:")
+                appendValueText(builder, flag, defVal.toString(), TextComponent.of(message("commands.region.flags.value.default"))
                         .append(TextComponent.newline()).append(TextComponent.of(defVal.toString())));
             }
         } else {
-            appendValueText(builder, flag, currVal.toString(), TextComponent.of("Текущее значение:")
+            appendValueText(builder, flag, currVal.toString(), TextComponent.of(message("commands.region.flags.value.current"))
                     .append(TextComponent.newline()).append(TextComponent.of(currVal.toString())));
         }
     }
@@ -419,7 +418,7 @@ class FlagHelperBox extends PaginationBox {
             choices.addAll(Arrays.asList(suggested));
         }
         //noinspection unchecked
-        appendValueChoices(builder, flag, (Iterator<V>) choices.iterator(), choices.isEmpty() ? "unset number" : "[custom]");
+        appendValueChoices(builder, flag, (Iterator<V>) choices.iterator(), choices.isEmpty() ? message("commands.region.flags.value.unset-number") : message("commands.region.flags.value.custom-short"));
     }
 
     private void appendStringFlagValue(TextComponent.Builder builder, StringFlag flag) {
@@ -430,7 +429,7 @@ class FlagHelperBox extends PaginationBox {
         if (currVal == null) {
             final String defVal = flag.getDefault();
             if (defVal == null) {
-                appendValueText(builder, flag, "unset string", null);
+                appendValueText(builder, flag, message("commands.region.flags.value.unset-string"), null);
             } else {
                 final TextComponent defComp = LegacyComponentSerializer.INSTANCE.deserialize(defVal);
                 String display = reduceToText(defComp);
@@ -438,7 +437,7 @@ class FlagHelperBox extends PaginationBox {
                 if (display.length() > 23) {
                     display = display.substring(0, 20) + "...";
                 }
-                appendValueText(builder, flag, display, TextComponent.of("Значение по умолчанию:")
+                appendValueText(builder, flag, display, TextComponent.of(message("commands.region.flags.value.default"))
                         .append(TextComponent.newline()).append(defComp));
             }
         } else {
@@ -448,9 +447,13 @@ class FlagHelperBox extends PaginationBox {
             if (display.length() > 23) {
                 display = display.substring(0, 20) + "...";
             }
-            appendValueText(builder, flag, display, TextComponent.of("Текущее значение:")
+            appendValueText(builder, flag, display, TextComponent.of(message("commands.region.flags.value.current"))
                     .append(TextComponent.newline()).append(currComp));
         }
+    }
+
+    private static String message(String key, Object... arguments) {
+        return WorldGuard.getInstance().getLocalization().format(key, arguments);
     }
 
     private static String reduceToText(Component component) {

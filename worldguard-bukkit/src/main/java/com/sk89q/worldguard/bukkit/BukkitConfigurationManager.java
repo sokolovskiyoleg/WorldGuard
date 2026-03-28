@@ -67,6 +67,8 @@ public class BukkitConfigurationManager extends YamlConfigurationManager {
     public void copyDefaults() {
         // Create the default configuration file
         plugin.createDefaultConfiguration(new File(plugin.getDataFolder(), "config.yml"), "config.yml");
+        plugin.createDefaultConfiguration(new File(plugin.getDataFolder(), "messages/en.yml"), "messages/en.yml");
+        plugin.createDefaultConfiguration(new File(plugin.getDataFolder(), "messages/ru.yml"), "messages/ru.yml");
     }
 
     @Override

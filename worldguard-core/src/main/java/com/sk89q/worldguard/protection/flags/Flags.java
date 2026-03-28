@@ -150,9 +150,8 @@ public final class Flags {
      *              in a future release. If you depend on the type of this flag, take proper precaution for future breakage.
      */
     @Deprecated
-    public static final StringFlag TELE_MESSAGE = register(new StringFlag("teleport-message",
-            LegacyComponentSerializer.INSTANCE.serialize(TextComponent.of("").append(TextComponent.of(
-                    "Вы телепортированы в регион '%id%'.", TextColor.LIGHT_PURPLE)))));
+    public static final StringFlag TELE_MESSAGE = register(new LocalizedStringFlag("teleport-message",
+            () -> serializeSimpleMessage("flags.teleport.default", TextColor.LIGHT_PURPLE)));
 
     // idk?
     public static final StateFlag INVINCIBILITY = register(new StateFlag("invincible", false));
@@ -220,28 +219,22 @@ public final class Flags {
      *              in a future release. If you depend on the type of this flag, take proper precaution for future breakage.
      */
     @Deprecated
-    public static final StringFlag DENY_MESSAGE = register(new StringFlag("deny-message",
-            LegacyComponentSerializer.INSTANCE.serialize(TextComponent.of("").append(TextComponent.of("§8[§c§l!§8]",
-                    TextColor.RED, Sets.newHashSet(TextDecoration.BOLD)))
-                    .append(TextComponent.of(" К сожалению, Вы не можете %what% в этом месте.", TextColor.GRAY)))));
+    public static final StringFlag DENY_MESSAGE = register(new LocalizedStringFlag("deny-message",
+            () -> serializeDenyMessage("flags.deny.default")));
     /**
      * @deprecated The type of this flag will change from a StringFlag to a ComponentFlag to support JSON text
      *              in a future release. If you depend on the type of this flag, take proper precaution for future breakage.
      */
     @Deprecated
-    public static final StringFlag ENTRY_DENY_MESSAGE = register(new StringFlag("entry-deny-message",
-            LegacyComponentSerializer.INSTANCE.serialize(TextComponent.of("").append(TextComponent.of("§8[§c§l!§8]",
-                    TextColor.RED, Sets.newHashSet(TextDecoration.BOLD)))
-                    .append(TextComponent.of(" К сожалению, Вам не разрешено входить в этот регион.", TextColor.GRAY)))));
+    public static final StringFlag ENTRY_DENY_MESSAGE = register(new LocalizedStringFlag("entry-deny-message",
+            () -> serializeDenyMessage("flags.entry-deny.default")));
     /**
      * @deprecated The type of this flag will change from a StringFlag to a ComponentFlag to support JSON text
      *              in a future release. If you depend on the type of this flag, take proper precaution for future breakage.
      */
     @Deprecated
-    public static final StringFlag EXIT_DENY_MESSAGE = register(new StringFlag("exit-deny-message",
-            LegacyComponentSerializer.INSTANCE.serialize(TextComponent.of("").append(TextComponent.of("§8[§c§l!§8]",
-                    TextColor.RED, Sets.newHashSet(TextDecoration.BOLD)))
-                    .append(TextComponent.of(" К сожалению, Вам не разрешено покидать этот регион.", TextColor.GRAY)))));
+    public static final StringFlag EXIT_DENY_MESSAGE = register(new LocalizedStringFlag("exit-deny-message",
+            () -> serializeDenyMessage("flags.exit-deny.default")));
 
     private Flags() {
     }
@@ -256,6 +249,17 @@ public final class Flags {
         T f = register(flag);
         cfg.accept(f);
         return f;
+    }
+
+    private static String serializeSimpleMessage(String key, TextColor color) {
+        return LegacyComponentSerializer.INSTANCE.serialize(TextComponent.of("")
+                .append(TextComponent.of(WorldGuard.getInstance().getLocalization().get(key), color)));
+    }
+
+    private static String serializeDenyMessage(String key) {
+        return LegacyComponentSerializer.INSTANCE.serialize(TextComponent.of("")
+                .append(TextComponent.of("§8[§c§l!§8]", TextColor.RED, Sets.newHashSet(TextDecoration.BOLD)))
+                .append(TextComponent.of(WorldGuard.getInstance().getLocalization().get(key), TextColor.GRAY)));
     }
 
     /**

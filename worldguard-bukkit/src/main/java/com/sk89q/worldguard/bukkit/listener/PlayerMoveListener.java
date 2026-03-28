@@ -25,6 +25,7 @@ import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.session.MoveType;
 import com.sk89q.worldguard.session.Session;
+import io.papermc.lib.PaperLib;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.AbstractHorse;
@@ -118,16 +119,37 @@ public class PlayerMoveListener extends AbstractListener {
                     current.eject();
                     vehicle.setVelocity(new Vector());
                     if (vehicle instanceof LivingEntity) {
-                        vehicle.teleport(override.clone());
+                        Location vehicleTeleportLocation = override.clone();
+                        if (getPlugin().isFolia()) {
+                            PaperLib.teleportAsync(vehicle, vehicleTeleportLocation);
+                        } else {
+                            vehicle.teleport(vehicleTeleportLocation);
+                        }
                     } else {
-                        vehicle.teleport(override.clone().add(0, 1, 0));
+                        Location dismountLocation = override.clone().add(0, 1, 0);
+                        if (getPlugin().isFolia()) {
+                           PaperLib.teleportAsync(vehicle, dismountLocation);
+                        } else {
+                           vehicle.teleport(dismountLocation);
+                        }
                     }
                     current = current.getVehicle();
                 }
 
-                player.teleport(override.clone().add(0, 1, 0));
+                Location playerDismountLocation = override.clone().add(0, 1, 0);
+                if (getPlugin().isFolia()) {
+                    PaperLib.teleportAsync(player, playerDismountLocation);
+                } else {
+                    player.teleport(playerDismountLocation);
+                }
 
-                Bukkit.getScheduler().runTaskLater(getPlugin(), () -> player.teleport(override.clone().add(0, 1, 0)), 1);
+
+                Location delayedDismountLocation = override.clone().add(0, 1, 0);
+                if (getPlugin().isFolia()) {
+                    player.getScheduler().runDelayed(getPlugin(), scheduledTask -> PaperLib.teleportAsync(player, delayedDismountLocation), null, 1);
+                } else {
+                    Bukkit.getScheduler().runTaskLater(getPlugin(), () -> player.teleport(delayedDismountLocation), 1);
+                }
             }
         }
     }
@@ -141,7 +163,11 @@ public class PlayerMoveListener extends AbstractListener {
         com.sk89q.worldedit.util.Location loc = session.testMoveTo(localPlayer,
             BukkitAdapter.adapt(event.getPlayer().getLocation()), MoveType.OTHER_CANCELLABLE); // white lie
         if (loc != null) {
-            player.teleport(BukkitAdapter.adapt(loc));
+            if (getPlugin().isFolia()) {
+                PaperLib.teleportAsync(player, BukkitAdapter.adapt(loc));
+            } else {
+                player.teleport(BukkitAdapter.adapt(loc));
+            }
         }
 
         session.uninitialize(localPlayer);
