@@ -565,7 +565,7 @@ public class RegionProtectionListener extends AbstractListener {
                     long now = System.currentTimeMillis();
                     Long lastTime = WGMetadata.getIfPresent(player, DISEMBARK_MESSAGE_KEY, Long.class);
                     if (lastTime == null || now - lastTime >= LAST_MESSAGE_DELAY) {
-                        player.sendMessage("" + ChatColor.GOLD + message("listeners.region.disembark.title") + ChatColor.GRAY + message("listeners.region.disembark.body"));
+                        player.sendMessage(colorMessage("listeners.region.disembark.message"));
                         WGMetadata.put(player, DISEMBARK_MESSAGE_KEY, now);
                     }
 
@@ -595,6 +595,10 @@ public class RegionProtectionListener extends AbstractListener {
 
     private String message(String key, Object... arguments) {
         return WorldGuard.getInstance().getLocalization().format(key, arguments);
+    }
+
+    private String colorMessage(String key, Object... arguments) {
+        return ChatColor.translateAlternateColorCodes('&', message(key, arguments));
     }
 
     /**

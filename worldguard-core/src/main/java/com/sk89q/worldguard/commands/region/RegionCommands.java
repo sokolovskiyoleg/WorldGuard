@@ -80,6 +80,7 @@ import com.sk89q.worldguard.protection.util.DomainInputResolver.UserLocatorPolic
 import com.sk89q.worldguard.protection.util.WorldEditRegionConverter;
 import com.sk89q.worldguard.session.Session;
 import com.sk89q.worldguard.util.Enums;
+import com.sk89q.worldguard.util.formatting.component.LocalizedComponents;
 import com.sk89q.worldguard.util.logging.LoggerToChatHandler;
 
 import java.util.ArrayList;
@@ -108,11 +109,10 @@ public final class RegionCommands extends RegionCommandsBase {
                 .append(TextComponent.of(message("commands.region.flags.warning.title"), TextColor.RED, Sets.newHashSet(TextDecoration.BOLD)))
                 .append(ErrorFormat.wrap(message("commands.region.flags.passthrough.body")))
                 .append(TextComponent.newline())
-                .append(TextComponent.of(message("commands.region.flags.common.prefix"))
-                        .append(TextComponent.of(message("commands.region.flags.common.link"), TextColor.AQUA)
+                .append(LocalizedComponents.message("commands.region.flags.common.line",
+                        TextComponent.of(message("commands.region.flags.common.link"), TextColor.AQUA)
                                 .clickEvent(ClickEvent.of(ClickEvent.Action.OPEN_URL,
-                                        "https://worldguard.enginehub.org/en/latest/regions/flags/#overrides")))
-                        .append(TextComponent.of(message("commands.region.flags.common.suffix"))));
+                                        "https://worldguard.enginehub.org/en/latest/regions/flags/#overrides"))));
     }
 
     private TextComponent buildFlagWarning() {
@@ -122,11 +122,10 @@ public final class RegionCommands extends RegionCommandsBase {
                 .append(TextComponent.newline())
                 .append(TextComponent.of(message("commands.region.flags.build.detail")))
                 .append(TextComponent.newline())
-                .append(TextComponent.of(message("commands.region.flags.common.prefix"))
-                        .append(TextComponent.of(message("commands.region.flags.common.link"), TextColor.AQUA)
+                .append(LocalizedComponents.message("commands.region.flags.common.line",
+                        TextComponent.of(message("commands.region.flags.common.link"), TextColor.AQUA)
                                 .clickEvent(ClickEvent.of(ClickEvent.Action.OPEN_URL,
-                                        "https://worldguard.enginehub.org/en/latest/regions/flags/#protection-related")))
-                        .append(TextComponent.of(message("commands.region.flags.common.suffix"))));
+                                        "https://worldguard.enginehub.org/en/latest/regions/flags/#protection-related"))));
     }
 
     /**
@@ -641,9 +640,9 @@ public final class RegionCommands extends RegionCommandsBase {
             sendFlagHelper(sender, world, existing, permModel, page);
         } else {
             RegionPrintoutBuilder printout = new RegionPrintoutBuilder(world.getName(), existing, null, sender);
-            printout.append(SubtleFormat.wrap(message("commands.region.flag.current.open")));
-            printout.appendFlagsList(false);
-            printout.append(SubtleFormat.wrap(message("commands.region.flag.current.close")));
+            RegionPrintoutBuilder flags = new RegionPrintoutBuilder(world.getName(), existing, null, sender);
+            flags.appendFlagsList(false);
+            printout.append(LocalizedComponents.message("commands.region.flag.current.wrapper", TextColor.GRAY, flags.toComponent()));
             printout.send(sender);
             checkSpawnOverlap(sender, world, existing);
         }
@@ -773,8 +772,9 @@ public final class RegionCommands extends RegionCommandsBase {
             assert parent != null;
             printout.append(ErrorFormat.wrap(message("commands.region.parent.circular", parent.getId(), child.getId()))).newline();
             printout.append(SubtleFormat.wrap(message("commands.region.parent.current-tree", parent.getId()))).newline();
-            printout.appendParentTree(true);
-            printout.append(SubtleFormat.wrap(message("commands.region.parent.tree-close")));
+            RegionPrintoutBuilder parentTree = new RegionPrintoutBuilder(world.getName(), parent, null, sender);
+            parentTree.appendParentTree(true);
+            printout.append(LocalizedComponents.message("commands.region.parent.tree-wrapper", TextColor.GRAY, parentTree.toComponent()));
             printout.send(sender);
             return;
         }
@@ -784,9 +784,9 @@ public final class RegionCommands extends RegionCommandsBase {
         printout.append(TextComponent.of(message("commands.region.parent.success", child.getId()), TextColor.LIGHT_PURPLE));
         if (parent != null) {
             printout.newline();
-            printout.append(SubtleFormat.wrap(message("commands.region.parent.tree-open"))).newline();
-            printout.appendParentTree(true);
-            printout.append(SubtleFormat.wrap(message("commands.region.parent.tree-close")));
+            RegionPrintoutBuilder parentTree = new RegionPrintoutBuilder(world.getName(), child, null, sender);
+            parentTree.appendParentTree(true);
+            printout.append(LocalizedComponents.message("commands.region.parent.tree-wrapper", TextColor.GRAY, parentTree.toComponent()));
         } else {
             printout.append(LabelFormat.wrap(message("commands.region.parent.orphaned")));
         }

@@ -47,6 +47,7 @@ import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.flags.StringFlag;
 import com.sk89q.worldguard.protection.flags.registry.UnknownFlag;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import com.sk89q.worldguard.util.formatting.component.LocalizedComponents;
 import com.sk89q.worldguard.util.formatting.component.LocalizedPaginationBox;
 
 import javax.annotation.Nullable;
@@ -319,19 +320,17 @@ class FlagHelperBox extends LocalizedPaginationBox {
         Component valType;
         if (inherited) {
             if (currVal == defVal) {
-                valType = TextComponent.of(message("commands.region.flags.tooltip.inherited-default.prefix"))
-                        .append(TextComponent.of(message("commands.region.flags.tooltip.default-word"))
-                                .decoration(TextDecoration.UNDERLINED, true))
-                        .append(TextComponent.of(message("commands.region.flags.tooltip.value-suffix")));
+                valType = LocalizedComponents.message("commands.region.flags.tooltip.inherited-default",
+                        TextComponent.of(message("commands.region.flags.tooltip.default-word"))
+                                .decoration(TextDecoration.UNDERLINED, true));
             } else {
                 valType = TextComponent.of(message("commands.region.flags.tooltip.inherited"));
             }
         } else {
             if (currVal == defVal) {
-                valType = TextComponent.empty()
-                        .append(TextComponent.of(message("commands.region.flags.tooltip.default-word"))
-                                .decoration(TextDecoration.UNDERLINED, true))
-                        .append(TextComponent.of(message("commands.region.flags.tooltip.value-suffix")));
+                valType = LocalizedComponents.message("commands.region.flags.tooltip.default",
+                        TextComponent.of(message("commands.region.flags.tooltip.default-word"))
+                                .decoration(TextDecoration.UNDERLINED, true));
             } else {
                 valType = null;
             }

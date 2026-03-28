@@ -47,6 +47,7 @@ import com.sk89q.worldedit.world.World;
 import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.config.ConfigurationManager;
+import com.sk89q.worldguard.util.formatting.component.LocalizedComponents;
 import com.sk89q.worldguard.util.logging.LoggerToChatHandler;
 import com.sk89q.worldguard.util.profiler.SamplerBuilder;
 import com.sk89q.worldguard.util.profiler.SamplerBuilder.Sampler;
@@ -212,10 +213,9 @@ public class WorldGuardCommands {
 
         sender.print(TextComponent.of(message("commands.profile.start.intro", minutes), TextColor.LIGHT_PURPLE)
                 .append(TextComponent.newline())
-                .append(TextComponent.of(message("commands.profile.start.use-prefix"), TextColor.GRAY))
-                .append(TextComponent.of("/wg stopprofile", TextColor.AQUA)
-                        .clickEvent(ClickEvent.of(ClickEvent.Action.SUGGEST_COMMAND, "/wg stopprofile")))
-                .append(TextComponent.of(message("commands.profile.start.use-suffix"), TextColor.GRAY)));
+                .append(LocalizedComponents.message("commands.profile.start.use", TextColor.GRAY,
+                        TextComponent.of("/wg stopprofile", TextColor.AQUA)
+                                .clickEvent(ClickEvent.of(ClickEvent.Action.SUGGEST_COMMAND, "/wg stopprofile")))));
 
         worldGuard.getSupervisor().monitor(FutureForwardingTask.create(
                 sampler.getFuture(), message("commands.profile.monitor-label", minutes), sender));

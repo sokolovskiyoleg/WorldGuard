@@ -24,6 +24,9 @@ import com.sk89q.worldedit.util.formatting.text.serializer.plain.PlainComponentS
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.blacklist.BlacklistEntry;
 import com.sk89q.worldguard.blacklist.event.BlacklistEvent;
+import com.sk89q.worldguard.util.formatting.component.LocalizedComponents;
+
+import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -50,7 +53,9 @@ public class TellAction extends RepeatGuardedAction {
                 // TODO Find a better way to do this String.format call that doesn't require a string.
                 event.getPlayer().print(TextComponent.of(String.format(message, PlainComponentSerializer.INSTANCE.serialize(event.getTarget().getFriendlyNameComponent()))));
             } else {
-                event.getPlayer().printError(TextComponent.of(WorldGuard.getInstance().getLocalization().format("blacklist.tell.denied-prefix", event.getDescription()) + " ").append(event.getTarget().getFriendlyNameComponent()).append(TextComponent.of(WorldGuard.getInstance().getLocalization().get("blacklist.tell.denied-suffix"))));
+                event.getPlayer().printError(LocalizedComponents.message("blacklist.tell.denied", Map.of(
+                        "action", TextComponent.of(event.getDescription()),
+                        "target", event.getTarget().getFriendlyNameComponent())));
             }
         }
 

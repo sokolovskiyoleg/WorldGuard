@@ -42,6 +42,7 @@ import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.flags.RegionGroupFlag;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import com.sk89q.worldguard.util.formatting.component.LocalizedComponents;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,13 +91,10 @@ public class RegionPrintoutBuilder implements Callable<TextComponent> {
         builder.append(TextComponent.of(message("commands.region.printout.region"), TextColor.GREEN));
         builder.append(TextComponent.of(region.getId(), TextColor.YELLOW)
                 .clickEvent(ClickEvent.of(ClickEvent.Action.RUN_COMMAND, "/rg info -w \"" + world + "\" " + region.getId())));
-        
-        builder.append(TextComponent.of(message("commands.region.printout.type-prefix"), TextColor.GRAY));
-        builder.append(TextComponent.of(region.getType().getName()));
-        
-        builder.append(TextComponent.of(message("commands.region.printout.priority-prefix"), TextColor.GRAY));
-        appendPriorityComponent(region);
-        builder.append(TextComponent.of(message("commands.region.printout.suffix"), TextColor.GRAY));
+
+        builder.append(LocalizedComponents.message("commands.region.printout.meta", TextColor.GRAY,
+                TextComponent.of(region.getType().getName()),
+                TextComponent.of(String.valueOf(region.getPriority()), TextColor.GOLD)));
 
         newline();
     }
@@ -241,9 +239,8 @@ public class RegionPrintoutBuilder implements Callable<TextComponent> {
             
             // Put (parent)
             if (!cur.equals(region)) {
-                builder.append(TextComponent.of(message("commands.region.printout.parent-prefix"), useColors ? TextColor.GRAY : TextColor.WHITE));
-                appendPriorityComponent(cur);
-                builder.append(TextComponent.of(message("commands.region.printout.suffix"), useColors ? TextColor.GRAY : TextColor.WHITE));
+                builder.append(LocalizedComponents.message("commands.region.printout.parent-meta", useColors ? TextColor.GRAY : TextColor.WHITE,
+                        TextComponent.of(String.valueOf(cur.getPriority()), TextColor.GOLD)));
             }
             if (last != null && cur.equals(region) && perms != null && perms.maySetParent(cur, last)) {
                 builder.append(TextComponent.space());

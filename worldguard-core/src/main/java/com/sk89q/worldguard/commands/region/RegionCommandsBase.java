@@ -57,6 +57,7 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery.QueryOption;
 import com.sk89q.worldguard.protection.util.WorldEditRegionConverter;
+import com.sk89q.worldguard.util.formatting.component.LocalizedComponents;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -353,9 +354,8 @@ class RegionCommandsBase {
      */
     protected static void informNewUser(Actor sender, RegionManager manager, ProtectedRegion region) {
         if (manager.size() <= 2) {
-            sender.print(SubtleFormat.wrap(message("commands.region.info.auto-protect.prefix"))
-                            .append(TextComponent.of("/rg flag " + region.getId() + " passthrough allow", TextColor.AQUA))
-                            .append(TextComponent.of(message("commands.region.info.auto-protect.suffix"), TextColor.GRAY)));
+            sender.print(LocalizedComponents.message("commands.region.info.auto-protect.message", TextColor.GRAY,
+                    TextComponent.of("/rg flag " + region.getId() + " passthrough allow", TextColor.AQUA)));
         }
     }
 
