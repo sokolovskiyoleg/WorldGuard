@@ -29,6 +29,7 @@ import com.sk89q.worldedit.world.gamemode.GameMode;
 import com.sk89q.worldedit.world.gamemode.GameModes;
 import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.bukkit.localization.BukkitLocalizationLoader;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.util.profile.resolver.PaperPlayerService;
@@ -139,6 +140,7 @@ public class BukkitWorldGuardPlatform implements WorldGuardPlatform {
         sessionManager = new BukkitSessionManager();
         configuration = new BukkitConfigurationManager(WorldGuardPlugin.inst());
         configuration.load();
+        WorldGuard.getInstance().setLocalization(new BukkitLocalizationLoader(WorldGuardPlugin.inst()).load(configuration.language));
         regionContainer = new BukkitRegionContainer(WorldGuardPlugin.inst());
         regionContainer.initialize();
         debugHandler = new BukkitDebugHandler(WorldGuardPlugin.inst());

@@ -52,6 +52,7 @@ public abstract class YamlConfigurationManager extends ConfigurationManager {
             e.printStackTrace();
         }
 
+        language = config.getString("language", "ru");
         config.removeProperty("suppress-tick-sync-warnings");
         migrateRegionsToUuid = config.getBoolean("regions.uuid-migration.perform-on-next-start", true);
         keepUnresolvedNames = config.getBoolean("regions.uuid-migration.keep-names-that-lack-uuids", true);

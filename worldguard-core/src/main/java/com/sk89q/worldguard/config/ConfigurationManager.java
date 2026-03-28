@@ -78,6 +78,7 @@ public abstract class ConfigurationManager {
     public boolean disablePermissionCache;
     public boolean disableDefaultBypass;
     public boolean announceBypassStatus;
+    public String language = "ru";
 
     @Unreported public Map<String, String> hostKeys = new HashMap<>();
     public boolean hostKeysAllowFMLClients;
